@@ -4,7 +4,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
-{ //SceneLoader usado nos botoes que trocam cena
+{
+
+    void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "Splash Screen")
+        {
+            Debug.Log("splash screen");
+            //StartCoroutine(LoadSplashScreen());
+
+        }
+    }
     void Update()
     { //usar pra testes    
         if (Input.GetKeyDown(KeyCode.L))
@@ -16,6 +26,7 @@ public class SceneLoader : MonoBehaviour
             LoadPreviosScene();
         }
     }
+
 
     public void LoadNextScene() //Carrega próxima scene, em relação a atual
     {
@@ -29,16 +40,16 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex - 1); //Posição da cena atual + 1 para abrir a próxima cena
     }
 
-    public void LoadMainMenu() //Carregar menu inicial  
+    public void LoadMainMenu() //Carregar menu inicial e reseta configs
     {
-
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene("Start Menu"); //pode usar 0, cena inicial é numero 0
-                                              //Se adicionar mais cenas, valor fica diferente de 2(maior)
-        FindObjectOfType<GameSession>().ResetGame(); //vai buscar o ResetGame em GameStatus.cs!!!
+        SceneManager.LoadScene("Start Menu"); //pode usar 0, cena inicial é numero 0 (NÃO MAIS)
         FindObjectOfType<MusicPlayer>().MainMenuSong();
-        FindObjectOfType<OptionsController>().SaveAndExit(); //SALVA MUDANÇAS no optionscontroller
-
+        if (FindObjectOfType<GameSession>() && FindObjectOfType<OptionsController>())
+        {
+            FindObjectOfType<GameSession>().ResetGame(); //vai buscar o ResetGame em GameStatus.cs!!!
+            FindObjectOfType<OptionsController>().SaveAndExit(); //SALVA MUDANÇAS no optionscontroller
+        }
     }
 
     public void LoadGameScene() //carrega primeira cena (primeiro level no caso)
@@ -72,7 +83,7 @@ public class SceneLoader : MonoBehaviour
     public void ReturnToGame()
     {
         FindObjectOfType<OptionsController>().SaveAndExit(); //SALVA MUDANÇAS no optionscontroller
-        FindObjectOfType<Paddle>().PaddleUnPause();
+        FindObjectOfType<PaddleMove>().PaddleUnPause();
         FindObjectOfType<GameSession>().GameUnPause();
         FindObjectOfType<Level>().TurnMenuOff();
         FindObjectOfType<Ball>().GameNotPausedLaunch();

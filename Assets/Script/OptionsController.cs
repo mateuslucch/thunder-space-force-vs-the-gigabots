@@ -8,7 +8,7 @@ public class OptionsController : MonoBehaviour
     [SerializeField] Slider volumeSlider;
     float defaultMusicVolume = 0.5f;
     [SerializeField] Slider sfxSlider;
-    //float defaultSFX = 0.5f;
+    float defaultSFX = 0.5f;
 
     void Start()
     {
@@ -42,7 +42,6 @@ public class OptionsController : MonoBehaviour
     public void SetDefaults()
     {
         volumeSlider.value = defaultMusicVolume;
-
     }
 
 }

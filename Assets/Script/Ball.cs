@@ -11,15 +11,10 @@ public class Ball : MonoBehaviour
     [SerializeField] float xPush = 0f;
     [SerializeField] float yPush = 15f;
 
-
     [SerializeField] AudioClip ballSounds; //arquivo som bola
     [SerializeField] AudioClip ballLaunch; //arquivo som de lançamento
     [SerializeField] float randomFactorY; //para trocar a direção da bola quando atinge objetos
     [SerializeField] float randomFactorX;
-
-    //ULTRAPASSADO//  [SerializeField] GameConfig soundLevel; //altura som
-
-    //public GameObject extraBall;
 
     [SerializeField] bool magnetsPower = false;
 
@@ -32,16 +27,14 @@ public class Ball : MonoBehaviour
     Vector2 paddleToBallVector;
     bool hasStarted = false;
     bool gameIsPaused = false;
+
     //cache component references
     AudioSource myAudioSource;
     Rigidbody2D myRigidBody2D;
 
-    // Use this for initialization
     void Start()
     {
-        float myAudioLevel = PlayerPrefsController.GetSfxVolume();
-
-        //StartBall();
+        float myAudioLevel = PlayerPrefsController.GetSfxVolume();        
         myAudioSource = GetComponent<AudioSource>();
         myVelocity = Mathf.Sqrt((xVel * xVel) + (yVel * yVel));
         myRigidBody2D = GetComponent<Rigidbody2D>();
@@ -50,21 +43,15 @@ public class Ball : MonoBehaviour
     public void StartBall() //sendo chamado no paddle.cs
     {
         paddleToBallVector = transform.position - paddle1.transform.position;
-        //myRigidBody2D = GetComponent<Rigidbody2D>();
-        //myVelocity = Mathf.Sqrt(xVel * xVel + yVel * yVel);
-
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!hasStarted)
         {
             LockBallToPaddle();
             LaunchOnMouseClick();
-
         }
-
     }
 
     public void GamePausedDontLaunch()
@@ -86,22 +73,21 @@ public class Ball : MonoBehaviour
 
                 //Toca som lançamento
                 AudioClip launch = ballLaunch;
-
-                //myAudioSource.PlayOneShot(launch, soundLevel.SfxVolume());  //myAudioSource.PlayOneShot(variavel,volume) ULTRAPASSADO
                 myAudioSource.PlayOneShot(launch, PlayerPrefsController.GetSfxVolume());  //myAudioSource.PlayOneShot(variavel,volume)
 
                 //LANÇAMENTO
-                //xPush = Random.Range(-1,1);   //lançamento em x RANDOMICO
+                //xPush = Random.Range(-1,1);   //RANDOM X LAUNCH
                 //xPush = Random.Range(0, 0); //0,0 PARA TESTES
                 GetComponent<Rigidbody2D>().velocity = new Vector2(xPush, yPush);
             }
         }
     }
+
     public void ReleaseClone()
     {
         hasStarted = true;
-
     }
+
     public void LockBallToPaddle()
     {
         Vector2 paddlePos = new Vector2(paddle1.transform.position.x, paddle1.transform.position.y);
@@ -110,8 +96,6 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
-
         //angulo colisao corrigido, minha solução
         float speedY = myRigidBody2D.velocity.y;
         float speedX = myRigidBody2D.velocity.x;
@@ -169,7 +153,6 @@ public class Ball : MonoBehaviour
 
         }
 
-
         //magnets!!
         if (collision.gameObject.tag == "Paddle")
         {
@@ -180,7 +163,6 @@ public class Ball : MonoBehaviour
         }
         //end magnets
 
-
     }
 
     //mais bolas PowerUp!!
@@ -190,7 +172,6 @@ public class Ball : MonoBehaviour
         var offset = new Vector3(0, 0.1f, 0);
         Instantiate(gameObject, transform.position + offset, transform.rotation);
         FindObjectOfType<Ball>().ReleaseClone();
-
     }
     //fim extra balls
 
@@ -201,7 +182,6 @@ public class Ball : MonoBehaviour
         hasStarted = false;
         Vector2 paddlePos = new Vector2(paddle1.transform.position.x, paddle1.transform.position.y);
         transform.position = paddlePos + paddleToBallVector;
-
     }
     public void DestroyBall()
     {
@@ -210,7 +190,6 @@ public class Ball : MonoBehaviour
     public void DestroyOnHit()
     {
         Destroy(gameObject);
-
     }
 
     //magnets!!
@@ -218,7 +197,6 @@ public class Ball : MonoBehaviour
     public void MagnetBall()
     {
         StartCoroutine(MagnetsPowerUp());
-
     }
 
     IEnumerator MagnetsPowerUp()

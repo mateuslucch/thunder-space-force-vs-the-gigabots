@@ -10,8 +10,7 @@ public class PowerUp : MonoBehaviour {
     [SerializeField] public Sprite[] powerUpSprites;
     int pUElement;
 
-    private SpriteRenderer spriteRenderer;
-    
+    private SpriteRenderer spriteRenderer;    
 
     // Use this for initialization
     void Start ()
@@ -64,7 +63,7 @@ public class PowerUp : MonoBehaviour {
             }
             if (pUElement == 2) //stretch paddle OK!!
             {
-                FindObjectOfType<Paddle>().EnlargePaddle();
+                FindObjectOfType<PaddleMove>().EnlargePaddle();
             }
             if (pUElement == 3) //lasers  sem sons
             {

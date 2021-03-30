@@ -7,6 +7,8 @@ public class MusicPlayer : MonoBehaviour
 {
 
     [SerializeField] AudioClip[] musicList;
+    [SerializeField] int firstLevelMusic = 2;
+    [SerializeField] int mainMenuMusic = 2;
     AudioSource myAudioSource;
     int singleMusic;
     float musicVolume;
@@ -27,18 +29,10 @@ public class MusicPlayer : MonoBehaviour
     }
     private void Start()
     {
-
         DontDestroyOnLoad(this); //do glich garden, nao destroy o objeto quando troca cena
-
-        //musicVolumeConfig = FindObjectOfType<GameConfigObject>();
-
         myAudioSource = GetComponent<AudioSource>();
         myAudioSource.volume = PlayerPrefsController.GetMasterVolume(); //valor do volume da musica
         ChangeSong();
-
-        //PlayMusic();
-
-        //musicVolume = musicVolumeConfig.MusicVolume();
     }
 
     public void ChangeSong() //altera musica, chamado no start e quando troca de fase
@@ -46,53 +40,37 @@ public class MusicPlayer : MonoBehaviour
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex; //pega valor da cena
         if (currentSceneIndex == 0) //igual zero é menu inical
         {
-
+            singleMusic = currentSceneIndex;
+            PlayMusic();
+        }
+        else if (currentSceneIndex == 1) //igual zero é menu inical
+        {
             singleMusic = currentSceneIndex;
             PlayMusic();
         }
         else
         {
-            singleMusic = Random.Range(1, musicList.Length);
+            singleMusic = Random.Range(firstLevelMusic, musicList.Length);
             PlayMusic();
         }
 
     }
     public void MainMenuSong()
     {
-        singleMusic = 0;
+        singleMusic = mainMenuMusic;
         PlayMusic();
     }
 
     private void PlayMusic()
     {
+        if (SceneManager.GetActiveScene().name == "Splash Screen")
+        {
+            myAudioSource.loop = false;
 
-        myAudioSource.loop = true;
+        }
+        else { myAudioSource.loop = true; }
         myAudioSource.clip = musicList[singleMusic];
         myAudioSource.Play();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        // myAudioSource.volume = musicConfig.MusicVolume();
-        /*myAudioSource.volume = musicVolume;
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            Debug.Log(musicMute);
-            Debug.Log("key m pressed");
-            if (musicMute != false)
-            {
-                musicVolume = musicVolumeConfig.MusicVolume();
-                musicMute = false;
-            }
-            else
-            {
-                musicVolume = 0f;
-                musicMute = true;
-            }
-        }
-        */
     }
 
     public void SetVolume(float volume) //do glitchgarden

@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class Level : MonoBehaviour
 {
-
     //parameters
 
     [SerializeField] TextMeshProUGUI numberBlocks;
@@ -17,6 +16,7 @@ public class Level : MonoBehaviour
     int breakableBlocks; //serializedfield for debugging purpose
     int winBlocks;
     bool levelEnded = false;
+
     //bolas
     [SerializeField] int ballLives = 3;
     [SerializeField] TextMeshProUGUI ballLivesText;
@@ -71,6 +71,7 @@ public class Level : MonoBehaviour
         //Cursor.lockState = CursorLockMode.Locked;
         //FIM
     }
+
     private static void CursorUnlocked()
     {
         Cursor.lockState = CursorLockMode.None;
@@ -84,7 +85,7 @@ public class Level : MonoBehaviour
             if (Input.GetKeyDown("escape"))
             {
                 FindObjectOfType<Ball>().GamePausedDontLaunch();
-                FindObjectOfType<Paddle>().PaddlePause();
+                FindObjectOfType<PaddleMove>().PaddlePause();
                 FindObjectOfType<GameSession>().GamePause();
                 inGameMenu.SetActive(true);
                 //cursor
@@ -92,7 +93,6 @@ public class Level : MonoBehaviour
 
             }
         }
-
     }
 
     public void TurnMenuOff()
@@ -110,7 +110,6 @@ public class Level : MonoBehaviour
     public void WinBlocks() //apenas conta os blocos que dao vitoria direta (independente se tem outros)
     {
         winBlocks++;
-
     }
     //termina start
 
@@ -125,9 +124,9 @@ public class Level : MonoBehaviour
         }
 
     }
+
     public void BlockDestroyed()
     {
-
         breakableBlocks--;
         count();
 
@@ -146,18 +145,19 @@ public class Level : MonoBehaviour
     {
 
         numberBlocks.text = ("Blocks Left: ") + breakableBlocks.ToString();
-
-        //PARA TESTES, lança powerups em todos (menos o primeiro)
-        /*allGenericBlocks = GameObject.FindGameObjectsWithTag("Breakable");
+        //PARA TESTES
+        //lança powerups em todos (menos o primeiro)
+        /*
+        allGenericBlocks = GameObject.FindGameObjectsWithTag("Breakable");
         for (var i = 0; i < allGenericBlocks.Length; i++)
         {
             actualBlock = allGenericBlocks[i].GetComponent<Block>();
             actualBlock.PowerUpTrue();
 
-        }*/
+        }
+        */
 
         //FINAL TESTES
-
 
         //processo para powerups
 
@@ -190,8 +190,6 @@ public class Level : MonoBehaviour
 
             }
         }
-
-
     }
 
     //GANHA VIDA EXTRA Do POWERUP!!
@@ -205,20 +203,16 @@ public class Level : MonoBehaviour
     public void AddBall()//chamado pelo powerup
     {
         numberBalls++;
-
     }
     public void ExtraBallsMethods()//chamado pelo lose collider
     {
-
         if (numberBalls >= 2f)
         {
             numberBalls--;
-
         }
         else
         {
             FindObjectOfType<Level>().LosePath();
-
         }
     }
     //end extraBalls methods
@@ -247,7 +241,6 @@ public class Level : MonoBehaviour
         else //reinicia
         {
             FindObjectOfType<Ball>().RestartBallToPaddle();
-
         }
 
     }
@@ -255,10 +248,7 @@ public class Level : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(3);
         SceneManager.LoadScene("Game Over");
-
     }
-
-
 
     //caminho da vitória!! :-)
     private void WinnerPath()
@@ -284,7 +274,6 @@ public class Level : MonoBehaviour
         for (var i = 0; i < lastPowerUps.Length; i++)
         {
             Destroy(lastPowerUps[i]);
-
         }
 
         //Destruir a bola. Evitar contagem de pontos quando vitoria ou derrota com blocos sobrandos
@@ -292,7 +281,6 @@ public class Level : MonoBehaviour
         for (var i = 0; i < lastBalls.Length; i++) //Destruir todas as bolas. Evitar contagem de pontos quando vitoria com blocos sobrandos
         {
             Destroy(lastBalls[i]);
-
         }
 
     }
@@ -304,30 +292,24 @@ public class Level : MonoBehaviour
         for (var i = 0; i < lastBlocks.Length; i++)
         {
             Destroy(lastBlocks[i]);
-
         }
         lastBlocks = GameObject.FindGameObjectsWithTag("WinBlock");
         for (var i = 0; i < lastBlocks.Length; i++)
         {
             Destroy(lastBlocks[i]);
-
         }
         lastBlocks = GameObject.FindGameObjectsWithTag("Unbreakable");
         for (var i = 0; i < lastBlocks.Length; i++)
         {
             Destroy(lastBlocks[i]);
-
         }
     }
 
     IEnumerator PausaWin()
     {
-
         yield return new WaitForSecondsRealtime(3);
         sceneloader.LoadNextScene(); //Roda o elemento LoadNextScene() do script SceneLoader.cs
-
     }
-
     //fim caminhos!!
 
 }
