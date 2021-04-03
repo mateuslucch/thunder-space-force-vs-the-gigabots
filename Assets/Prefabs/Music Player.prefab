@@ -43,7 +43,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicList:
-  - {fileID: 8300000, guid: d853479ab23e5734886a7990e8e6b80c, type: 3}
+  - {fileID: 8300000, guid: baaf4f98100aa6f409847e7aef249602, type: 3}
   - {fileID: 8300000, guid: 11ac465aff72eed409244ae3a04c68e7, type: 3}
   - {fileID: 8300000, guid: 75fc3a2bbb907014f89b089bf9a280fb, type: 3}
   - {fileID: 8300000, guid: eb98a0ed85f52cc45b1e62e86e3ea67a, type: 3}
@@ -151,4 +151,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 87c782c5d87c2fb40a9fc25f9b04a419, type: 3}
   firstLevelMusic: 2
   mainMenuMusic: 1
+  splashScreenSong: 0
   musicConfig: {fileID: 11400000, guid: 244a2aea2a7793943ae4dd1d41d55a01, type: 2}

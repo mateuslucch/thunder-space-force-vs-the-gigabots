@@ -5,9 +5,13 @@ using UnityEngine;
 public class SplashScreen : MonoBehaviour
 {
     public void StartMenu()
-    {
-        Debug.Log("Start Menu");
-        FindObjectOfType<SceneLoader>().LoadMainMenu();
+    {        
+        FindObjectOfType<SceneLoader>().LoadMainMenu();        
     }
-
+    public void StartSong()
+    {
+        //FindObjectOfType<MusicPlayer>().SplashScreenSong();
+        AudioSource myAudioSource = GetComponent<AudioSource>();
+        myAudioSource.Play();
+    }
 }

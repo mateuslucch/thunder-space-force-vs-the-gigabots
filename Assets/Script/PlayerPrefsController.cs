@@ -10,7 +10,7 @@ public class PlayerPrefsController : MonoBehaviour
 
     const float MIN_VOLUME = 0f;
     const float MAX_VOLUME = 1f;
-
+    
     const float SFX_MIN = 0f;
     const float SFX_MAX = 1f;
 
@@ -18,7 +18,7 @@ public class PlayerPrefsController : MonoBehaviour
     {
         if (volume >= MIN_VOLUME && volume <= MAX_VOLUME)
         {
-            Debug.Log("Master volume set to " + volume);
+            //Debug.Log("Master volume set to " + volume);
             PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, volume);
         }
         else
@@ -30,7 +30,7 @@ public class PlayerPrefsController : MonoBehaviour
     {
         if (volume >= SFX_MIN && volume <= SFX_MAX)
         {
-            Debug.Log("SFX volume set to " + volume);
+            //Debug.Log("SFX volume set to " + volume);
             PlayerPrefs.SetFloat(SFX_VOLUME_KEY, volume);
         }
         else

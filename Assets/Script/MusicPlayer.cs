@@ -9,6 +9,7 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] AudioClip[] musicList;
     [SerializeField] int firstLevelMusic = 2;
     [SerializeField] int mainMenuMusic = 2;
+    [SerializeField] int splashScreenSong = 0;
     AudioSource myAudioSource;
     int singleMusic;
     float musicVolume;
@@ -38,12 +39,12 @@ public class MusicPlayer : MonoBehaviour
     public void ChangeSong() //altera musica, chamado no start e quando troca de fase
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex; //pega valor da cena
-        if (currentSceneIndex == 0) //igual zero é menu inical
+         if (currentSceneIndex == 0) //igual 1 é menu inical
         {
             singleMusic = currentSceneIndex;
             PlayMusic();
         }
-        else if (currentSceneIndex == 1) //igual zero é menu inical
+        else if (currentSceneIndex == 1) //igual 1 é menu inical
         {
             singleMusic = currentSceneIndex;
             PlayMusic();
@@ -55,6 +56,14 @@ public class MusicPlayer : MonoBehaviour
         }
 
     }
+
+    public void SplashScreenSong() //called from splash screen
+    {
+        singleMusic = splashScreenSong;
+        myAudioSource.loop = true;
+        PlayMusic();
+    }
+    
     public void MainMenuSong()
     {
         singleMusic = mainMenuMusic;
@@ -66,7 +75,6 @@ public class MusicPlayer : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "Splash Screen")
         {
             myAudioSource.loop = false;
-
         }
         else { myAudioSource.loop = true; }
         myAudioSource.clip = musicList[singleMusic];

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerUp : MonoBehaviour {
+public class PowerUp : MonoBehaviour
+{
 
     [SerializeField] GameObject extraBalls;
 
@@ -10,22 +11,19 @@ public class PowerUp : MonoBehaviour {
     [SerializeField] public Sprite[] powerUpSprites;
     int pUElement;
 
-    private SpriteRenderer spriteRenderer;    
+    private SpriteRenderer spriteRenderer;
 
-    // Use this for initialization
-    void Start ()
+    void Start()
     {
-        
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         //pUElement = Random.Range(0, powerUpSprites.Length); //nao usar!! sem probabilidades, só randomico
-        
-        //pUElement = 1;  //usar para testes individuais
 
-        float randomPercentage = Random.Range (0f, 101f);
+        float randomPercentage = Random.Range(0f, 101f);
         if (randomPercentage <= 50f)
         {
-          pUElement =   Random.Range(0, 3);
-          spriteRenderer.sprite = powerUpSprites[pUElement];
+            pUElement = Random.Range(0, 3);
+            spriteRenderer.sprite = powerUpSprites[pUElement];
         }
         if (randomPercentage >= 51f && randomPercentage <= 94f)
         {
@@ -37,13 +35,14 @@ public class PowerUp : MonoBehaviour {
             pUElement = 4;
             spriteRenderer.sprite = powerUpSprites[pUElement];
         }
+
+        //pUElement = 2;  //usar para testes individuais
         
         spriteRenderer.sprite = powerUpSprites[pUElement];
         //Debug.Log(rand);
         //Debug.Log(pUElement);
-
     }
-    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Paddle")
@@ -65,7 +64,7 @@ public class PowerUp : MonoBehaviour {
             {
                 FindObjectOfType<PaddleMove>().EnlargePaddle();
             }
-            if (pUElement == 3) //lasers  sem sons
+            if (pUElement == 3) //lasers sem sons
             {
                 FindObjectOfType<Paddle>().ActivateLasers();
             }
@@ -73,6 +72,7 @@ public class PowerUp : MonoBehaviour {
             {
                 FindObjectOfType<Level>().ExtraLife();
             }
+            //ADICIONAR MAIS????????
 
         }
 
@@ -84,7 +84,8 @@ public class PowerUp : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-		
-	}
+    void Update()
+    {
+
+    }
 }

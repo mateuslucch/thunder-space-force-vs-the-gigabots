@@ -6,17 +6,8 @@ using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
 
-    void Start()
-    {
-        if (SceneManager.GetActiveScene().name == "Splash Screen")
-        {
-            Debug.Log("splash screen");
-            //StartCoroutine(LoadSplashScreen());
-
-        }
-    }
     void Update()
-    { //usar pra testes    
+    { //USAR PARA TESTES
         if (Input.GetKeyDown(KeyCode.L))
         {
             LoadNextScene();
@@ -34,6 +25,7 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex + 1); //Posição da cena atual + 1 para abrir a próxima cena
 
     }
+
     public void LoadPreviosScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -43,8 +35,11 @@ public class SceneLoader : MonoBehaviour
     public void LoadMainMenu() //Carregar menu inicial e reseta configs
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene("Start Menu"); //pode usar 0, cena inicial é numero 0 (NÃO MAIS)
-        FindObjectOfType<MusicPlayer>().MainMenuSong();
+        SceneManager.LoadScene("Start Menu"); //pode usar 0, cena inicial é numero 0 (NÃO MAIS, AGORA É 1)
+        if (FindObjectOfType<MusicPlayer>()) //nao dar erro quando termina splashscreen (a mesma tenta chamar)
+        {
+            FindObjectOfType<MusicPlayer>().MainMenuSong();
+        }
         if (FindObjectOfType<GameSession>() && FindObjectOfType<OptionsController>())
         {
             FindObjectOfType<GameSession>().ResetGame(); //vai buscar o ResetGame em GameStatus.cs!!!
@@ -87,7 +82,6 @@ public class SceneLoader : MonoBehaviour
         FindObjectOfType<GameSession>().GameUnPause();
         FindObjectOfType<Level>().TurnMenuOff();
         FindObjectOfType<Ball>().GameNotPausedLaunch();
-
     }
 
 }

@@ -17,10 +17,11 @@ public class Ball : MonoBehaviour
     [SerializeField] float randomFactorX;
 
     [SerializeField] bool magnetsPower = false;
+    [SerializeField] float magnetsTime = 5f;
 
     float myVelocity;
-    float xVel = 5f;
-    float yVel = 12f;
+    [SerializeField] float xVel = 5f;
+    [SerializeField] float yVel = 12f;
 
     //state
     Vector2 velocityTweak;
@@ -34,7 +35,7 @@ public class Ball : MonoBehaviour
 
     void Start()
     {
-        float myAudioLevel = PlayerPrefsController.GetSfxVolume();        
+        float myAudioLevel = PlayerPrefsController.GetSfxVolume();
         myAudioSource = GetComponent<AudioSource>();
         myVelocity = Mathf.Sqrt((xVel * xVel) + (yVel * yVel));
         myRigidBody2D = GetComponent<Rigidbody2D>();
@@ -77,7 +78,7 @@ public class Ball : MonoBehaviour
 
                 //LANÇAMENTO
                 //xPush = Random.Range(-1,1);   //RANDOM X LAUNCH
-                //xPush = Random.Range(0, 0); //0,0 PARA TESTES
+                xPush = Random.Range(0, 0); //0,0 PARA TESTES
                 GetComponent<Rigidbody2D>().velocity = new Vector2(xPush, yPush);
             }
         }
@@ -144,8 +145,7 @@ public class Ball : MonoBehaviour
         {
             hasStarted = true;
 
-            //SOM BOLA BATIDAS
-            //AudioSource.PlayClipAtPoint(ballSounds, Camera.main.transform.position, soundLevel.SfxVolume());//ULTRAPASSADO
+            //SOM BOLA BATIDAS            
             AudioSource.PlayClipAtPoint(ballSounds, Camera.main.transform.position, PlayerPrefsController.GetSfxVolume());
 
             myRigidBody2D.velocity += velocityTweak;
@@ -162,13 +162,11 @@ public class Ball : MonoBehaviour
             }
         }
         //end magnets
-
     }
 
     //mais bolas PowerUp!!
     public void ExtraBalls()
     {
-
         var offset = new Vector3(0, 0.1f, 0);
         Instantiate(gameObject, transform.position + offset, transform.rotation);
         FindObjectOfType<Ball>().ReleaseClone();
@@ -179,9 +177,12 @@ public class Ball : MonoBehaviour
 
     public void RestartBallToPaddle()
     {
-        hasStarted = false;
-        Vector2 paddlePos = new Vector2(paddle1.transform.position.x, paddle1.transform.position.y);
-        transform.position = paddlePos + paddleToBallVector;
+        if (hasStarted == true)
+        {
+            hasStarted = false;
+            Vector2 paddlePos = new Vector2(paddle1.transform.position.x, paddle1.transform.position.y);
+            transform.position = paddlePos + paddleToBallVector;
+        }
     }
     public void DestroyBall()
     {
@@ -202,7 +203,7 @@ public class Ball : MonoBehaviour
     IEnumerator MagnetsPowerUp()
     {
         magnetsPower = true;
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitForSecondsRealtime(magnetsTime);
         magnetsPower = false;
     }
     //end magnets!!

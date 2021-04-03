@@ -45,7 +45,7 @@ public class Block : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) //antiga, que destruia bloco diretamente, passou para HandleHit
     {
 
-        if (tag == "Breakable" || tag == "WinBlock") //a "tag" se escolhe e configura no inspector
+        if (tag == "Breakable" || tag == "WinBlock")
         {
             HandleHit();
         }
@@ -79,7 +79,7 @@ public class Block : MonoBehaviour
         if (timesHit == maxHits)
         {
             CallPowerUp();
-            DestroyBlock(); //destroi blocos, adiciona ponto no score (GameSession.cs) e desconta total blocos no Level.cs
+            DestroyBlockFromInside(); //destroi blocos, adiciona ponto no score (GameSession.cs) e desconta total blocos no Level.cs
 
         }
         else
@@ -101,13 +101,13 @@ public class Block : MonoBehaviour
         }
     }
 
-    private void DestroyBlock()
+    public void DestroyBlockFromOutside()
     {
+        DestroyAndPlay();
+    }
 
-        //ULTRAPASSADO // AudioSource.PlayClipAtPoint(blockBreak, Camera.main.transform.position, soundLevel.SfxVolume()); //pode usar "new Vector3(8,6,-2)" coordenadas da camera 
-        AudioSource.PlayClipAtPoint(blockBreak, Camera.main.transform.position, PlayerPrefsController.GetSfxVolume()); //pode usar "new Vector3(8,6,-2)" coordenadas da camera 
-
-        TriggerSparklesVFX();
+    private void DestroyBlockFromInside()
+    {
         if (tag == "WinBlock")
         {
             level.WinBlocksDestroyed();
@@ -118,8 +118,19 @@ public class Block : MonoBehaviour
             level.BlockDestroyed();
             FindObjectOfType<GameSession>().AddToScore();  //roda o grupo AddToScore() no arquivo GameSession, contar o score
         }
-        Destroy(gameObject);           //fazendo (gameObject, 1f) ele leva um tempo para sumir
+        //fazendo (gameObject, 1f) ele leva um tempo para sumir
+        DestroyAndPlay();
     }
+
+    private void DestroyAndPlay()
+    {
+        AudioSource.PlayClipAtPoint(blockBreak,
+                                Camera.main.transform.position,
+                                PlayerPrefsController.GetSfxVolume()); //pode usar "new Vector3(8,6,-2)" coordenadas da camera 
+        TriggerSparklesVFX();
+        Destroy(gameObject);
+    }
+
     private void TriggerSparklesVFX()
     {
         GameObject sparkles = Instantiate(blockSparklesVFX, transform.position, transform.rotation);
@@ -142,12 +153,8 @@ public class Block : MonoBehaviour
             GameObject power = Instantiate(
                        powerUps,
                        transform.position,
-                       transform.rotation) as GameObject; //ver o que cada coisa faz
+                       transform.rotation) as GameObject;
             power.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -2f);
-
-
         }
-
     }
-
 }

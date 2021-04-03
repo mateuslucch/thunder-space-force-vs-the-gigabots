@@ -7,13 +7,16 @@ public class PaddleMove : MonoBehaviour
     [Header("Move")]
     [SerializeField] float minX = 3.4f;
     [SerializeField] float maxX = 12.6f;
-
+    [SerializeField] float extendedMaxBounds = 0f;
+    [SerializeField] float extendedMinBounds = 0f;
+    
     //[SerializeField] float mouseSensivity = 6f; //usar no desktop
 
     [SerializeField] float screenWidthInUnitsx = 16f; //usar para browser
-    [SerializeField] GameObject ballObject;
-    bool stretchCondition = false;
+    [SerializeField] GameObject ballObject;    
     bool paddlePaused = false;
+
+    Animator myAnimator;
 
     Vector2 paddlePos; //usado quando mouse unico controle
     GameSession theGameSession;
@@ -21,6 +24,7 @@ public class PaddleMove : MonoBehaviour
 
     void Start()
     {
+        myAnimator = GetComponent<Animator>();
         theGameSession = FindObjectOfType<GameSession>();
         theBall = FindObjectOfType<Ball>();
         theBall.StartBall();
@@ -50,27 +54,31 @@ public class PaddleMove : MonoBehaviour
         }
     }
 
-     //esticar paddle(usar sprites mais adiante)
+    //inicio enlarge paddle
     public void EnlargePaddle()
     {
-        if (stretchCondition != true)
-        {
-            StartCoroutine(EnlargingPaddle());
-            minX = 4.6f;
-            maxX = 11.4f;
-            transform.localScale += new Vector3(1.3f, 0, 0);
-        }
+        myAnimator.SetBool("Enlarge", true);
+        StartCoroutine(EnlargingPaddle());
+        minX = extendedMinBounds;
+        maxX = extendedMaxBounds;
     }
 
     IEnumerator EnlargingPaddle()
     {
-        stretchCondition = true; //estica paddle
-        yield return new WaitForSecondsRealtime(8); //conta tempo
-        transform.localScale += new Vector3(-1.3f, 0, 0);
-        stretchCondition = false;
+        yield return new WaitForSecondsRealtime(10); //conta tempo, antes de executar o proximo                                                   
+
+        myAnimator.SetBool("Desenlarge", true);
+        myAnimator.SetBool("Enlarge", false);
         minX = 3.4f;
         maxX = 12.6f;
     }
+
+    public void EnlargeIdle() //chamado quando termina o desenlarge(EVENTO)
+    {
+        myAnimator.SetBool("Desenlarge", false);
+    }
+    //fim enlarge paddle
+
     public void PaddlePause()
     {
         paddlePaused = true;

@@ -1058,6 +1058,11 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114804969000129444, guid: 72ecbb23d92941d419951e4a3d80f55e,
+        type: 3}
+      propertyPath: timeShooting
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 212230978825565338, guid: 72ecbb23d92941d419951e4a3d80f55e,
         type: 3}
       propertyPath: m_SortingLayer

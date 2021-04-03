@@ -46,8 +46,10 @@ public class Level : MonoBehaviour
 
     private void Start()
     {
-        FindObjectOfType<MusicPlayer>().ChangeSong(); //troca de musica a cada fase nova
-
+        if (FindObjectOfType<MusicPlayer>()) // checking for tests
+        {
+            FindObjectOfType<MusicPlayer>().ChangeSong(); //troca de musica a cada fase nova
+        }
         gameStatus.gameObject.SetActive(false); //esconde texto
 
         sceneloader = FindObjectOfType<SceneLoader>(); //busca o arquivo SceneLoader.cs e passa pro sceneloader
@@ -61,7 +63,7 @@ public class Level : MonoBehaviour
         inGameMenu.SetActive(false);
 
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex - levelNumberFactor;//captura numero da cena
-        levelNumber.text = ("Level ") + currentSceneIndex.ToString();//mostra numero da fase
+        levelNumber.text = ("Level ") + (currentSceneIndex - 1).ToString();//mostra numero da fase
     }
 
     private static void CursorLocked() //USAR SÓ NO DESKTOP
@@ -100,13 +102,14 @@ public class Level : MonoBehaviour
         inGameMenu.SetActive(false);
         CursorLocked();
     }
+
     public void CountBlocks() //Cada bloco tem o mesmo script. 
                               //Quando a fase inicia, o script é lido na mesma quantidade de blocos. Cada lida, acrescenta +1 na variável "breakableBlocks"
     {
         breakableBlocks++;
         numberBlocks.text = ("Blocks Left: ") + breakableBlocks.ToString();
-
     }
+
     public void WinBlocks() //apenas conta os blocos que dao vitoria direta (independente se tem outros)
     {
         winBlocks++;
@@ -120,9 +123,8 @@ public class Level : MonoBehaviour
         count();
         if (winBlocks <= 0) //condição de vitória, caso só os blocos de vitória são destruídos
         {
-            WinnerPath();
+            StartCoroutine(WinnerPath());
         }
-
     }
 
     public void BlockDestroyed()
@@ -134,7 +136,7 @@ public class Level : MonoBehaviour
         {
             if (winBlocks <= 0) //se não tiver essa condição, ele da vitória só com os quebraveis
             {
-                WinnerPath();
+                StartCoroutine(WinnerPath());
 
             }
         }
@@ -250,19 +252,18 @@ public class Level : MonoBehaviour
         SceneManager.LoadScene("Game Over");
     }
 
-    //caminho da vitória!! :-)
-    private void WinnerPath()
+    //CAMINHO DA VITÓRIA!! :-)
+    private IEnumerator WinnerPath()
     {
-        DestroyThings();
-
         FindObjectOfType<GameSession>().SceneManagement();
         FindObjectOfType<GameSession>().TotalScore();
         gameStatus.gameObject.SetActive(true);
         gameStatus.text = ("You Win!!");
-        StartCoroutine(PausaWin()); //tempo antes de saltar para próxima scene
         levelEnded = true; //bloqueia o menu 
         CursorUnlocked();
-        DestroyLastBlocks();
+        DestroyThings();
+        yield return StartCoroutine(DestroyLastBlocks());
+        StartCoroutine(PausaWin());  //tempo antes de saltar para próxima scene
     }
 
     private void DestroyThings()
@@ -284,30 +285,38 @@ public class Level : MonoBehaviour
         }
 
     }
+
     //destroi blocos após vitoria
-    private void DestroyLastBlocks()
+    private IEnumerator DestroyLastBlocks()
     {
         //destruir blocos não quebrados, porque sim
         lastBlocks = GameObject.FindGameObjectsWithTag("Breakable");
-        for (var i = 0; i < lastBlocks.Length; i++)
-        {
-            Destroy(lastBlocks[i]);
-        }
+        yield return StartCoroutine(DestroyBlocks(lastBlocks));
+
         lastBlocks = GameObject.FindGameObjectsWithTag("WinBlock");
-        for (var i = 0; i < lastBlocks.Length; i++)
-        {
-            Destroy(lastBlocks[i]);
-        }
+        yield return StartCoroutine(DestroyBlocks(lastBlocks));
+
         lastBlocks = GameObject.FindGameObjectsWithTag("Unbreakable");
-        for (var i = 0; i < lastBlocks.Length; i++)
+        yield return StartCoroutine(DestroyBlocks(lastBlocks));
+
+    }
+
+    IEnumerator DestroyBlocks(GameObject[] lastBlocks)
+    {
+        foreach (GameObject blockToDestroyed in lastBlocks)
         {
-            Destroy(lastBlocks[i]);
+            yield return new WaitForSecondsRealtime(0.1f);
+            if (blockToDestroyed != null)
+            {
+                blockToDestroyed.GetComponent<Block>().DestroyBlockFromOutside();
+            }
         }
     }
 
     IEnumerator PausaWin()
     {
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitForSecondsRealtime(3f);
+        Debug.Log("começando nova fase");
         sceneloader.LoadNextScene(); //Roda o elemento LoadNextScene() do script SceneLoader.cs
     }
     //fim caminhos!!

@@ -18,15 +18,21 @@ public class OptionsController : MonoBehaviour
 
     void Update()
     {
-        var musicPlayer = FindObjectOfType<MusicPlayer>();
-        if (musicPlayer)
+
+        if (FindObjectOfType<MusicPlayer>())
         {
-            musicPlayer.SetVolume(volumeSlider.value);
+            var musicPlayer = FindObjectOfType<MusicPlayer>();
+
+            if (musicPlayer)
+            {
+                musicPlayer.SetVolume(volumeSlider.value);
+            }
+            else
+            {
+                Debug.LogWarning("No music player found...did you start from splash screen?");
+            }
         }
-        else
-        {
-            Debug.LogWarning("No music player found...did you start from splash screen?");
-        }
+
     }
     public void SaveAndExit()
     {
