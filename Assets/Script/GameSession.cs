@@ -20,8 +20,6 @@ public class GameSession : MonoBehaviour
 
     [SerializeField] int currentSceneIndex;
 
-    //cached
-
     private void Awake()
     {
         int gameStatusCount = FindObjectsOfType<GameSession>().Length;
@@ -36,7 +34,7 @@ public class GameSession : MonoBehaviour
 
     }
 
-    private void Start() //só roda uma vez, até o GameSession ser destruido
+    private void Start()
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex; //busca o valor da primeira scene quando gamesession é carregado
         realTimeSpeed = gameSpeed;
@@ -57,9 +55,7 @@ public class GameSession : MonoBehaviour
     }
     public void SceneManagement()
     {
-        currentSceneIndex++;
-        //Debug.Log(currentSceneIndex);
-
+        currentSceneIndex++;        
     }
 
     //showscore busca valor do score
@@ -73,14 +69,12 @@ public class GameSession : MonoBehaviour
     {
         currentScore = currentScore + pointPerBlockDestroyed;
         //scoreText.text = ("Score: ") + currentScore.ToString();
-
     }
 
     public void TotalScore() //atualiza o score total se ganhar
     {
         totalScore = currentScore;
         //scoreText.text = ("Score: ") + totalScore.ToString();
-
     }
 
     public void UpdateScore()
@@ -100,8 +94,7 @@ public class GameSession : MonoBehaviour
         return isAutoPlayEnabled;
     }
 
-    //processos carregar level perdido
-
+    //Rollback the score and Restart the last level 
     public void RestartLastLevel()
     {
 

@@ -34,7 +34,7 @@ public class Level : MonoBehaviour
     SceneLoader sceneloader;
     GameObject powerUpCondition;
 
-    //destruir apos vitoria pu derrota
+    //destruir apos vitoria ou derrota
     public GameObject[] lastBalls;
     public GameObject[] lastPowerUps;
     public GameObject[] lastBlocks;
@@ -84,17 +84,20 @@ public class Level : MonoBehaviour
     {
         if (levelEnded == false)
         {
-            if (Input.GetKeyDown("escape"))
+            if (Input.GetKeyDown("escape")) //abre menu
             {
-                FindObjectOfType<Ball>().GamePausedDontLaunch();
-                FindObjectOfType<PaddleMove>().PaddlePause();
-                FindObjectOfType<GameSession>().GamePause();
-                inGameMenu.SetActive(true);
-                //cursor
-                CursorUnlocked();
-
+                TurnMenuOn();
             }
         }
+    }
+
+    public void TurnMenuOn()
+    {
+        FindObjectOfType<Ball>().GamePausedDontLaunch();
+        FindObjectOfType<PaddleMove>().PaddlePause();
+        FindObjectOfType<GameSession>().GamePause();
+        inGameMenu.SetActive(true);
+        CursorUnlocked();
     }
 
     public void TurnMenuOff()
@@ -178,7 +181,6 @@ public class Level : MonoBehaviour
                 {
                     actualBlock = allGenericBlocks[i].GetComponent<Block>();
                     actualBlock.PowerUpTrue();
-
                 }
             }
             anotherRandomPowerup = 2f;
@@ -189,7 +191,6 @@ public class Level : MonoBehaviour
             {
                 actualBlock = allGenericBlocks[i].GetComponent<Block>();
                 actualBlock.PowerUpFalse();
-
             }
         }
     }
@@ -298,7 +299,6 @@ public class Level : MonoBehaviour
 
         lastBlocks = GameObject.FindGameObjectsWithTag("Unbreakable");
         yield return StartCoroutine(DestroyBlocks(lastBlocks));
-
     }
 
     IEnumerator DestroyBlocks(GameObject[] lastBlocks)

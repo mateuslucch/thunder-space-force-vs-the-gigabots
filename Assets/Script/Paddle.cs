@@ -25,7 +25,6 @@ public class Paddle : MonoBehaviour
     }
 
     //lasers!!
-
     public void ActivateLasers()
     {
         firePowerUp = true;
@@ -52,9 +51,7 @@ public class Paddle : MonoBehaviour
                    gunPosition,
                    transform.rotation) as GameObject; //ver o que cada coisa faz
         paddleLaser.GetComponent<Rigidbody2D>().velocity = new Vector2(0, projectileSpeed);
-
     }
-
     IEnumerator StopLasers()
     {
         yield return new WaitForSecondsRealtime(timeShooting);

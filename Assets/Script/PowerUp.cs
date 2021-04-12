@@ -36,7 +36,7 @@ public class PowerUp : MonoBehaviour
             spriteRenderer.sprite = powerUpSprites[pUElement];
         }
 
-        //pUElement = 2;  //usar para testes individuais
+        //pUElement = Random.Range(0,2);  //usar para testes individuais
         
         spriteRenderer.sprite = powerUpSprites[pUElement];
         //Debug.Log(rand);
@@ -56,13 +56,12 @@ public class PowerUp : MonoBehaviour
             }
             if (pUElement == 1)  //chamar mais bolas...ok!!
             {
-                FindObjectOfType<Ball>().ExtraBalls(); //adiciona uma bola "instantiate"
+                FindObjectOfType<Ball>().ExtraBalls(); //adiciona uma bola "instantiate" a partir de outra
                 FindObjectOfType<Level>().AddBall(); //adiciona +1 na conta de bolas
-
             }
             if (pUElement == 2) //stretch paddle OK!!
             {
-                FindObjectOfType<PaddleMove>().EnlargePaddle();
+                FindObjectOfType<PaddleMove>().ExtraPaddles();
             }
             if (pUElement == 3) //lasers sem sons
             {
@@ -81,11 +80,5 @@ public class PowerUp : MonoBehaviour
     public void Hit()
     {
         Destroy(gameObject);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    }   
 }

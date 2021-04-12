@@ -24,7 +24,6 @@ public class Block : MonoBehaviour
     private void Start()
     {
         CountBreakableBlocks();
-
     }
 
     private void CountBreakableBlocks() ///conta os blocos no começo
@@ -38,18 +37,15 @@ public class Block : MonoBehaviour
                 level.WinBlocks();
             }
         }
-
     }
 
     //PROCESSO DESTRUIR COM BOLA
     private void OnCollisionEnter2D(Collision2D collision) //antiga, que destruia bloco diretamente, passou para HandleHit
     {
-
         if (tag == "Breakable" || tag == "WinBlock")
         {
             HandleHit();
         }
-
     }
 
     //PROCESSO DESTRUIR COM LASER
@@ -80,7 +76,6 @@ public class Block : MonoBehaviour
         {
             CallPowerUp();
             DestroyBlockFromInside(); //destroi blocos, adiciona ponto no score (GameSession.cs) e desconta total blocos no Level.cs
-
         }
         else
         {

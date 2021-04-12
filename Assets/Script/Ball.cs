@@ -59,29 +59,47 @@ public class Ball : MonoBehaviour
     {
         gameIsPaused = true;
     }
+
     public void GameNotPausedLaunch()
     {
         gameIsPaused = false;
+    }
+
+    public void LaunchFromTouch()
+    {
+        if (!hasStarted)
+        {
+            if (gameIsPaused == false)
+            {
+                hasStarted = true;
+                LaunchBall();
+            }
+        }
     }
 
     private void LaunchOnMouseClick()
     {
         if (gameIsPaused == false)
         {
-            if (Input.GetMouseButtonDown(0))
+            //if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 hasStarted = true;
-
-                //Toca som lançamento
-                AudioClip launch = ballLaunch;
-                myAudioSource.PlayOneShot(launch, PlayerPrefsController.GetSfxVolume());  //myAudioSource.PlayOneShot(variavel,volume)
-
-                //LANÇAMENTO
-                //xPush = Random.Range(-1,1);   //RANDOM X LAUNCH
-                xPush = Random.Range(0, 0); //0,0 PARA TESTES
-                GetComponent<Rigidbody2D>().velocity = new Vector2(xPush, yPush);
+                LaunchBall();
             }
         }
+    }
+
+    private void LaunchBall()
+    {
+        //Toca som lançamento
+        AudioClip launch = ballLaunch;
+        myAudioSource.PlayOneShot(launch, PlayerPrefsController.GetSfxVolume());  //myAudioSource.PlayOneShot(variavel,volume)
+
+        //LANÇAMENTO
+        //xPush = Random.Range(-1,1);   //RANDOM X LAUNCH
+        xPush = Random.Range(0, 0); //0,0 PARA TESTES
+        GetComponent<Rigidbody2D>().velocity = new Vector2(xPush, yPush);
     }
 
     public void ReleaseClone()

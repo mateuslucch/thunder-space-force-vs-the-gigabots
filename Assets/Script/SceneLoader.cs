@@ -18,7 +18,6 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-
     public void LoadNextScene() //Carrega próxima scene, em relação a atual
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -52,7 +51,10 @@ public class SceneLoader : MonoBehaviour
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
         FindObjectOfType<GameSession>().ResetGame();
-        FindObjectOfType<OptionsController>().SaveAndExit(); //SALVA MUDANÇAS no optionscontroller
+        if (FindObjectOfType<OptionsController>())
+        {
+            FindObjectOfType<OptionsController>().SaveAndExit(); //SALVA MUDANÇAS no optionscontroller
+        }
         SceneManager.LoadScene("Level1"); //pode usar 1 aqui, cena inicial é numero 0(start menu)
     }
 

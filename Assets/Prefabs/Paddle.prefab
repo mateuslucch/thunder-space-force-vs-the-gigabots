@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565450979435116}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8, y: 0.575, z: -1}
+  m_LocalPosition: {x: 8, y: 0.575, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5816129369067776307}
@@ -88,9 +88,8 @@ MonoBehaviour:
   maxX: 12.6
   extendedMaxBounds: 11
   extendedMinBounds: 5
-  extraPaddles:
-  - {fileID: 6094491971909330002}
-  - {fileID: 4245580458336046211}
+  mouseSensivity: 6
+  paddleSpeed: 10
   screenWidthInUnitsx: 16
   ballObject: {fileID: 0}
 --- !u!114 &114804969000129444
@@ -331,12 +330,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93887d9f67818c240abe001a34371e30, type: 3}
---- !u!1 &4245580458336046211 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1565450979435116, guid: 93887d9f67818c240abe001a34371e30,
-    type: 3}
-  m_PrefabInstance: {fileID: 4246572473065090799}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4242547154131611471 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4034119321567648, guid: 93887d9f67818c240abe001a34371e30,
@@ -400,12 +393,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93887d9f67818c240abe001a34371e30, type: 3}
---- !u!1 &6094491971909330002 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1565450979435116, guid: 93887d9f67818c240abe001a34371e30,
-    type: 3}
-  m_PrefabInstance: {fileID: 6095186604847711806}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6095664903527204766 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4034119321567648, guid: 93887d9f67818c240abe001a34371e30,

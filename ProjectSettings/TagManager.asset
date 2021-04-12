@@ -49,6 +49,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Button
+    uniqueID: 4244600087
+    locked: 0
   - name: Blocks
     uniqueID: 2734456653
     locked: 0

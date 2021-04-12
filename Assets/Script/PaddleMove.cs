@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class PaddleMove : MonoBehaviour
 {
-    [Header("Move")]
+    [Header("MoveWithControls")]
     [SerializeField] float minX = 3.4f;
     [SerializeField] float maxX = 12.6f;
     [SerializeField] float extendedMaxBounds = 0f;
-    [SerializeField] float extendedMinBounds = 0f;
-    
-    //[SerializeField] float mouseSensivity = 6f; //usar no desktop
+    [SerializeField] float extendedMinBounds = 0f;    
+    [SerializeField] float mouseSensivity = 6f; //usar no desktop
+    [SerializeField] float paddleSpeed = 1f;
 
     [SerializeField] float screenWidthInUnitsx = 16f; //usar para browser
-    [SerializeField] GameObject ballObject;    
+    [SerializeField] GameObject ballObject;
     bool paddlePaused = false;
 
     Animator myAnimator;
@@ -29,6 +29,7 @@ public class PaddleMove : MonoBehaviour
         theBall = FindObjectOfType<Ball>();
         theBall.StartBall();
     }
+
     void Update()
     {
         //ORIGINAL!! NÃO USAR EM DESKTOP
@@ -37,33 +38,68 @@ public class PaddleMove : MonoBehaviour
         //float mousePosInUnits1 = (Input.mousePosition.x / Screen.width * screenWidthInUnitsx); //OLD
         //float mousePosInUnits2 = (Input.mousePosition.y / Screen.width * screenWidthInUnitsy);
 
-        if (paddlePaused == false)
+        if (paddlePaused == false) //condição, trocada quando abre e fecha menu
         {
             //ORIGINAL. NÃO USAR NO DESKTOP
+            /*
+            Debug.Log(GetXPos());
             Vector2 paddlePos = new Vector2(transform.position.x, transform.position.y); //"transform.position.y" mantém na posição y que está no unity
             paddlePos.x = Mathf.Clamp(GetXPos(), minX, maxX);
             transform.position = paddlePos;
+            */
 
-            //do laser defender (NÃO USAR PARA BROWSER!!)
-            /*
-            var deltaX = Input.GetAxis("Horizontal") / Screen.width * mouseSensivity;
-            var newXPos = Mathf.Clamp(transform.position.x + deltaX, minX, maxX);  //"Mathf.Clamp("posição do objeto", "limite minimo", "limite máximo")"
-            transform.position = new Vector2(newXPos, transform.position.y);
-           */
+            //COMANDOS USAR COM TECLADO
+            MoveWithControls();
+        }
+    }
 
+    public void MoveWithTouch(int direction)
+    {
+        float deltaX;
+        deltaX = Time.deltaTime * paddleSpeed * direction;
+        MoveObject(deltaX);
+    }
+
+    private void MoveWithControls()
+    {
+        float deltaX = Input.GetAxisRaw("Horizontal") * paddleSpeed * Time.deltaTime;
+        MoveObject(deltaX);
+    }
+
+    private void MoveObject(float deltaX)
+    {
+        var newXPos = Mathf.Clamp(transform.position.x + deltaX, minX, maxX);  //"Mathf.Clamp(posição do objeto + incremento, "limite minimo", "limite máximo")"
+        transform.position = new Vector2(newXPos, transform.position.y);
+    }
+
+    private float GetXPos()
+    {
+        if (theGameSession.IsAutoPlayEnabled()) //testes. paddle segue a bola
+        {
+            return theBall.transform.position.x;
+        }
+        else
+        {
+            //quando trocar lembrar de trocar nas configs de input na unity
+            //USAR NO BROWSER
+            //return Input.mousePosition.x / Screen.width * screenWidthInUnitsx;
+            //USAR NO DESKTOP
+            return Input.GetAxis("Horizontal");
+            //usar no android
+            //????
         }
     }
 
     //inicio enlarge paddle
-    public void EnlargePaddle()
+    public void ExtraPaddles()
     {
         myAnimator.SetBool("Enlarge", true);
-        StartCoroutine(EnlargingPaddle());
+        StartCoroutine(ExtraPaddleRoutine());
         minX = extendedMinBounds;
         maxX = extendedMaxBounds;
     }
 
-    IEnumerator EnlargingPaddle()
+    IEnumerator ExtraPaddleRoutine()
     {
         yield return new WaitForSecondsRealtime(10); //conta tempo, antes de executar o proximo                                                   
 
@@ -88,19 +124,5 @@ public class PaddleMove : MonoBehaviour
     {
         paddlePaused = false;
     }
-    private float GetXPos()
-    {
-        if (theGameSession.IsAutoPlayEnabled())
-        {
-            return theBall.transform.position.x;
-        }
-        else
-        {
-            //USAR NO BROWSER
-            return Input.mousePosition.x / Screen.width * screenWidthInUnitsx;
-            //USAR NO DESKTOP
-            //return Input.GetAxis("Horizontal");
 
-        }
-    }
 }
