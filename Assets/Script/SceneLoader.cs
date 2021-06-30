@@ -7,7 +7,9 @@ public class SceneLoader : MonoBehaviour
 {
 
     void Update()
-    { //USAR PARA TESTES
+    { 
+        //USAR PARA TESTES
+        //TROCA DE CENA USANDO L E K
         if (Input.GetKeyDown(KeyCode.L))
         {
             LoadNextScene();
@@ -18,23 +20,23 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-    public void LoadNextScene() //Carrega próxima scene, em relação a atual
+    public void LoadNextScene() //Carrega próxima scene, em relação a atual, usado quando passa de fase
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex + 1); //Posição da cena atual + 1 para abrir a próxima cena
-
     }
 
     public void LoadPreviosScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex - 1); //Posição da cena atual + 1 para abrir a próxima cena
+        SceneManager.LoadScene(currentSceneIndex - 1);
     }
 
     public void LoadMainMenu() //Carregar menu inicial e reseta configs
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene("Start Menu"); //pode usar 0, cena inicial é numero 0 (NÃO MAIS, AGORA É 1)
+        SceneManager.LoadScene("Start Menu"); //pode usar 0, MENU inicial é numero 0 (NÃO MAIS, AGORA É 1)
+
         if (FindObjectOfType<MusicPlayer>()) //nao dar erro quando termina splashscreen (a mesma tenta chamar)
         {
             FindObjectOfType<MusicPlayer>().MainMenuSong();
@@ -46,7 +48,7 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-    public void LoadGameScene() //carrega primeira cena (primeiro level no caso)
+    public void LoadGameScene() //carrega primeira cena (primeiro level no caso)//ESTÁ SENDO USADO???
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
@@ -66,14 +68,13 @@ public class SceneLoader : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-
     }
 
     public void LoadLevelOne() //carrega primeira cena (primeiro level no caso)
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
-        SceneManager.LoadScene("Level1"); //pode usar 1 aqui, cena inicial é numero 0(start menu)
+        SceneManager.LoadScene("Level1"); //pode usar 1 aqui SEM ASPAS, se lvl 1 for cena 1, cena inicial é numero 0(start menu)
         FindObjectOfType<OptionsController>().SaveAndExit();
     }
 

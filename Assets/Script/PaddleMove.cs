@@ -90,7 +90,7 @@ public class PaddleMove : MonoBehaviour
         }
     }
 
-    //inicio enlarge paddle
+    //inicio extra paddle
     public void ExtraPaddles()
     {
         myAnimator.SetBool("Enlarge", true);

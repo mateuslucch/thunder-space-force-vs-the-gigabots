@@ -22,15 +22,7 @@ public class Level : MonoBehaviour
     [SerializeField] TextMeshProUGUI ballLivesText;
     float numberBalls = 1f;
 
-    //powerup
-    [SerializeField] float blocksToPowerUp = 2f;
-    Block actualBlock;
-    [SerializeField] public GameObject[] allGenericBlocks;
-    float randomPowerup; //iguala com anotherRandomPowerUp, dependendo da condição
-    float anotherRandomPowerup = 1f;  //varia de 1 a 2
-
-    //cached reference
-    //[SerializeField] GameObject powerUps;
+    //cached reference    
     SceneLoader sceneloader;
     GameObject powerUpCondition;
 
@@ -40,26 +32,26 @@ public class Level : MonoBehaviour
     public GameObject[] lastBlocks;
 
     [SerializeField] GameConfig soundLevel;
-
     [SerializeField] AudioClip youLoseSound;
     [SerializeField] GameObject inGameMenu;
 
     private void Start()
     {
-        if (FindObjectOfType<MusicPlayer>()) // checking for tests
+        if (FindObjectOfType<MusicPlayer>()) // checking for tests, evitar erros se nao tiver o objeto
         {
             FindObjectOfType<MusicPlayer>().ChangeSong(); //troca de musica a cada fase nova
         }
+        else { Debug.Log("there is no musicplayerhere"); }
+
         gameStatus.gameObject.SetActive(false); //esconde texto
 
-        sceneloader = FindObjectOfType<SceneLoader>(); //busca o arquivo SceneLoader.cs e passa pro sceneloader
+        sceneloader = FindObjectOfType<SceneLoader>();
         FindObjectOfType<GameSession>().UpdateScore(); //nao ta sendo usado
         ballLivesText.text = ("Lives: " + ballLives); //atualiza texto de vidas
 
         //cursor mouse,USAR APENAS PARA DESKTOP!!!
         //CursorLocked();
 
-        allGenericBlocks = GameObject.FindGameObjectsWithTag("Breakable");
         inGameMenu.SetActive(false);
 
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex - levelNumberFactor;//captura numero da cena
@@ -124,10 +116,18 @@ public class Level : MonoBehaviour
         winBlocks--;
         breakableBlocks--;
         count();
+
+        //escolher duas formas de vencer destruindo blocos especiais
+
+        //vitoria se só um bloco especial for destruido
+        StartCoroutine(WinnerPath());
+
+        /* //vitoria se todos blocos especiais forem destruidos
         if (winBlocks <= 0) //condição de vitória, caso só os blocos de vitória são destruídos
         {
             StartCoroutine(WinnerPath());
         }
+        */
     }
 
     public void BlockDestroyed()
@@ -163,36 +163,6 @@ public class Level : MonoBehaviour
         */
 
         //FINAL TESTES
-
-        //processo para powerups
-
-        blocksToPowerUp--;
-        allGenericBlocks = GameObject.FindGameObjectsWithTag("Breakable");
-
-        if (blocksToPowerUp <= 0f)
-        {
-            randomPowerup = Random.Range(anotherRandomPowerup, 2f);
-
-            if (randomPowerup == 2f)
-            {
-                blocksToPowerUp = 3f;
-                anotherRandomPowerup = 1f;
-                for (var i = 0; i < allGenericBlocks.Length; i++)
-                {
-                    actualBlock = allGenericBlocks[i].GetComponent<Block>();
-                    actualBlock.PowerUpTrue();
-                }
-            }
-            anotherRandomPowerup = 2f;
-        }
-        else
-        {
-            for (var i = 0; i < allGenericBlocks.Length; i++)
-            {
-                actualBlock = allGenericBlocks[i].GetComponent<Block>();
-                actualBlock.PowerUpFalse();
-            }
-        }
     }
 
     //GANHA VIDA EXTRA Do POWERUP!!
@@ -202,12 +172,12 @@ public class Level : MonoBehaviour
         ballLivesText.text = ("Lives: " + ballLives);
     }
 
-    //extraballs!!! EVITAR PERDA DE VIDA, QUANDO TIVER MULTIPLAS BOLAS, chamado pelo powerup
+    //extraballs!!!  e também EVITAR PERDA DE VIDA, QUANDO TIVER MULTIPLAS BOLAS, chamado pelo powerup
     public void AddBall()//chamado pelo powerup
     {
         numberBalls++;
     }
-    public void ExtraBallsMethods()//chamado pelo lose collider
+    public void ExtraBallsMethods() //chamado pelo lose collider
     {
         if (numberBalls >= 2f)
         {
@@ -247,7 +217,7 @@ public class Level : MonoBehaviour
         }
 
     }
-    IEnumerator PausaLose()
+    IEnumerator PausaLose() //pausa antes de começar nova fase
     {
         yield return new WaitForSecondsRealtime(3);
         SceneManager.LoadScene("Game Over");
@@ -287,7 +257,7 @@ public class Level : MonoBehaviour
 
     }
 
-    //destroi blocos após vitoria
+    //destroi blocos remanescentes após vitoria
     private IEnumerator DestroyLastBlocks()
     {
         //destruir blocos não quebrados, porque sim
@@ -316,7 +286,6 @@ public class Level : MonoBehaviour
     IEnumerator PausaWin()
     {
         yield return new WaitForSecondsRealtime(3f);
-        Debug.Log("começando nova fase");
         sceneloader.LoadNextScene(); //Roda o elemento LoadNextScene() do script SceneLoader.cs
     }
     //fim caminhos!!

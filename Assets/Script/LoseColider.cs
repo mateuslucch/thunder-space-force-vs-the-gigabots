@@ -6,7 +6,7 @@ public class LoseColider : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ball")
         {
-            FindObjectOfType<Level>().ExtraBallsMethods(); //destroy ball without losing life, if there is more than one
+            FindObjectOfType<Level>().ExtraBallsMethods(); //destroy ball without losing life if there is more than one
         }
         else
         {

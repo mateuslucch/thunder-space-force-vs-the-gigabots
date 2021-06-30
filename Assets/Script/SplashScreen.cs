@@ -9,8 +9,7 @@ public class SplashScreen : MonoBehaviour
         FindObjectOfType<SceneLoader>().LoadMainMenu();        
     }
     public void StartSong()
-    {
-        //FindObjectOfType<MusicPlayer>().SplashScreenSong();
+    {        
         AudioSource myAudioSource = GetComponent<AudioSource>();
         myAudioSource.Play();
     }

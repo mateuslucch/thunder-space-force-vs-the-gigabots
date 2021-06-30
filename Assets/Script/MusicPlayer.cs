@@ -8,8 +8,7 @@ public class MusicPlayer : MonoBehaviour
 
     [SerializeField] AudioClip[] musicList;
     [SerializeField] int firstLevelMusic = 2;
-    [SerializeField] int mainMenuMusic = 2;
-    [SerializeField] int splashScreenSong = 0;
+    [SerializeField] int mainMenuMusic = 1;
     AudioSource myAudioSource;
     int singleMusic;
     float musicVolume;
@@ -17,7 +16,7 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] GameConfig musicConfig;
 
     private void Awake()
-    {
+    {        
         int playerMusic = FindObjectsOfType<MusicPlayer>().Length;
         if (playerMusic > 1)
         {
@@ -28,9 +27,10 @@ public class MusicPlayer : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
+
     private void Start()
     {
-        DontDestroyOnLoad(this); //do glich garden, nao destroy o objeto quando troca cena
+        DontDestroyOnLoad(this);
         myAudioSource = GetComponent<AudioSource>();
         myAudioSource.volume = PlayerPrefsController.GetMasterVolume(); //valor do volume da musica
         ChangeSong();
@@ -38,32 +38,25 @@ public class MusicPlayer : MonoBehaviour
 
     public void ChangeSong() //altera musica, chamado no start e quando troca de fase
     {
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex; //pega valor da cena
-         if (currentSceneIndex == 0) //igual 1 é menu inical
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (currentSceneIndex == 0)
         {
             singleMusic = currentSceneIndex;
             PlayMusic();
         }
-        else if (currentSceneIndex == 1) //igual 1 é menu inical
+        else if (currentSceneIndex == 1)
         {
-            singleMusic = currentSceneIndex;
+            singleMusic = mainMenuMusic;
             PlayMusic();
         }
         else
         {
-            singleMusic = Random.Range(firstLevelMusic, musicList.Length);
+            singleMusic = Random.Range(firstLevelMusic, musicList.Length);            
+            Debug.Log(singleMusic);
             PlayMusic();
         }
-
     }
 
-    public void SplashScreenSong() //called from splash screen
-    {
-        singleMusic = splashScreenSong;
-        myAudioSource.loop = true;
-        PlayMusic();
-    }
-    
     public void MainMenuSong()
     {
         singleMusic = mainMenuMusic;
@@ -81,10 +74,9 @@ public class MusicPlayer : MonoBehaviour
         myAudioSource.Play();
     }
 
-    public void SetVolume(float volume) //do glitchgarden
+    public void SetVolume(float volume)
     {
         myAudioSource.volume = volume;
     }
-
 
 }

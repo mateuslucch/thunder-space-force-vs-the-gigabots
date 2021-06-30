@@ -6,32 +6,39 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
 
-    //configuration parameters
+    [Header("Configuration Parameters")]
     [SerializeField] AudioClip blockBreak;
     [SerializeField] GameObject blockSparklesVFX;
-    [SerializeField] Sprite[] hitSprites; //variavel tipo sprites(?)
+    [SerializeField] Sprite[] hitSprites;
 
     [SerializeField] GameObject powerUps;
     [SerializeField] bool releasePowerUp = false;
 
     float health = 200;
+
     //cached reference
     Level level;
+    PowerupControl powerupControl;
 
     //state variables
-    [SerializeField] int timesHit; //serialized for debug reasons
+    int timesHit;
 
     private void Start()
     {
+        powerupControl = FindObjectOfType<PowerupControl>();
+        if (powerupControl == null)
+        {
+            Debug.Log("forgot powerupControl on level");
+        }
         CountBreakableBlocks();
     }
 
-    private void CountBreakableBlocks() ///conta os blocos no começo
+    private void CountBreakableBlocks() //conta os blocos no começo
     {
         level = FindObjectOfType<Level>();
-        if (tag == "Breakable" || tag == "WinBlock") // "||" = "or" e "&&" = "and"
+        if (tag == "Breakable" || tag == "WinBlock")
         {
-            level.CountBlocks();      //roda o grupo CountBlocks(), contida no script level
+            level.CountBlocks();
             if (tag == "WinBlock")
             {
                 level.WinBlocks();
@@ -39,8 +46,8 @@ public class Block : MonoBehaviour
         }
     }
 
-    //PROCESSO DESTRUIR COM BOLA
-    private void OnCollisionEnter2D(Collision2D collision) //antiga, que destruia bloco diretamente, passou para HandleHit
+    //TESTE SE BOLA ATINGE
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (tag == "Breakable" || tag == "WinBlock")
         {
@@ -48,12 +55,12 @@ public class Block : MonoBehaviour
         }
     }
 
-    //PROCESSO DESTRUIR COM LASER
+    //TESTE SE LASER ATINGE
     private void OnTriggerEnter2D(Collider2D other)
     {
         DamageDealer damageDealer = other.gameObject.GetComponent<DamageDealer>();
-        if (!damageDealer) { return; }
-        ProcessHit(damageDealer); //mantém damageDealer, se não não é chamado no metodo
+        if (!damageDealer) { return; } //testa se objeto que atingiu não possui DamageDealer
+        ProcessHit(damageDealer);
     }
 
     private void ProcessHit(DamageDealer damageDealer)
@@ -68,19 +75,16 @@ public class Block : MonoBehaviour
         }
     }
 
-    private void HandleHit()  //destroi blocos ou mostra proxima sprite
+    private void HandleHit()  //destroi o bloco ou mostra proxima sprite, QUANDO ATINGIDO POR LASER OU BOLA
     {
         timesHit++;
         int maxHits = hitSprites.Length + 1; //numero de hits que o bloco leva antes de ser destruido, tamanho do array definido para o bloco mais um
         if (timesHit == maxHits)
         {
             CallPowerUp();
-            DestroyBlockFromInside(); //destroi blocos, adiciona ponto no score (GameSession.cs) e desconta total blocos no Level.cs
+            DestroyBlockFromInside();
         }
-        else
-        {
-            ShowNextHitSprite(); //mostra próxima sprite
-        }
+        else { ShowNextHitSprite(); }
     }
 
     private void ShowNextHitSprite()
@@ -96,12 +100,13 @@ public class Block : MonoBehaviour
         }
     }
 
-    public void DestroyBlockFromOutside()
+    //DESTRUIÇÃO DE BLOCOS
+    public void DestroyBlockFromOutside() //chamado de outra classe, usada quando termina a fase e o bloco não é destruido
     {
         DestroyAndPlay();
     }
 
-    private void DestroyBlockFromInside()
+    private void DestroyBlockFromInside() //proprio bloco se destroy, quando atingido por algo
     {
         if (tag == "WinBlock")
         {
@@ -117,7 +122,7 @@ public class Block : MonoBehaviour
         DestroyAndPlay();
     }
 
-    private void DestroyAndPlay()
+    private void DestroyAndPlay() //toca som, joga faiscas e destroy o bloco
     {
         AudioSource.PlayClipAtPoint(blockBreak,
                                 Camera.main.transform.position,
@@ -133,17 +138,9 @@ public class Block : MonoBehaviour
     }
 
     //CHAMA OS POWER UPS!!!
-    public void PowerUpTrue()
-    {
-        releasePowerUp = true;
-    }
-    public void PowerUpFalse()
-    {
-        releasePowerUp = false;
-    }
     private void CallPowerUp()
     {
-        if (releasePowerUp == true)
+        if (powerupControl.CountBlocksToPowerup(releasePowerUp))
         {
             GameObject power = Instantiate(
                        powerUps,
@@ -152,4 +149,5 @@ public class Block : MonoBehaviour
             power.GetComponent<Rigidbody2D>().velocity = new Vector2(0, -2f);
         }
     }
+
 }

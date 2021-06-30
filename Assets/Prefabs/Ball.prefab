@@ -240,6 +240,6 @@ MonoBehaviour:
   randomFactorY: 0
   randomFactorX: 0
   magnetsPower: 0
-  magnetsTime: 500
+  magnetsTime: 15
   xVel: 0
   yVel: 10

@@ -12,6 +12,7 @@ TagManager:
   - Unbreakable
   - PowerUp
   - Laser
+  - ExtraPaddle
   layers:
   - Default
   - TransparentFX

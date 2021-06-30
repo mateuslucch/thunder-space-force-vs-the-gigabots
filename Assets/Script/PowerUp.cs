@@ -36,8 +36,10 @@ public class PowerUp : MonoBehaviour
             spriteRenderer.sprite = powerUpSprites[pUElement];
         }
 
-        //pUElement = Random.Range(0,2);  //usar para testes individuais
-        
+        //usar para testes individuais
+        //pUElement = Random.Range(0,2);  
+        //pUElement = 2;
+
         spriteRenderer.sprite = powerUpSprites[pUElement];
         //Debug.Log(rand);
         //Debug.Log(pUElement);
@@ -45,7 +47,7 @@ public class PowerUp : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Paddle")
+        if (collision.gameObject.tag == "Paddle" || collision.gameObject.tag == "ExtraPaddle")
         {
             Destroy(gameObject);
 
@@ -59,11 +61,11 @@ public class PowerUp : MonoBehaviour
                 FindObjectOfType<Ball>().ExtraBalls(); //adiciona uma bola "instantiate" a partir de outra
                 FindObjectOfType<Level>().AddBall(); //adiciona +1 na conta de bolas
             }
-            if (pUElement == 2) //stretch paddle OK!!
+            if (pUElement == 2) //extra ships OK!
             {
                 FindObjectOfType<PaddleMove>().ExtraPaddles();
             }
-            if (pUElement == 3) //lasers sem sons
+            if (pUElement == 3) //lasers 
             {
                 FindObjectOfType<Paddle>().ActivateLasers();
             }
@@ -80,5 +82,5 @@ public class PowerUp : MonoBehaviour
     public void Hit()
     {
         Destroy(gameObject);
-    }   
+    }
 }
