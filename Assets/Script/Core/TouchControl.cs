@@ -40,11 +40,14 @@ public class TouchControl : MonoBehaviour
                 //launch ball button
                 if (hits.collider.name == "Launch Ball Left" || hits.collider.name == "Launch Ball Right")
                 {
+                    /*
                     var balls = GameObject.FindObjectsOfType<Ball>();
                     foreach (var ball in balls)
                     {
                         ball.LaunchFromTouch();
                     }
+                    */
+                    GameObject.FindObjectOfType<BallLauncher>().LaunchFromTouch();
                 }
 
                 //menu button

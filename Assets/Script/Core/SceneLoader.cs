@@ -7,7 +7,7 @@ public class SceneLoader : MonoBehaviour
 {
 
     void Update()
-    { 
+    {
         //USAR PARA TESTES
         //TROCA DE CENA USANDO L E K
         if (Input.GetKeyDown(KeyCode.L))
@@ -84,7 +84,6 @@ public class SceneLoader : MonoBehaviour
         FindObjectOfType<PaddleMove>().PaddleUnPause();
         FindObjectOfType<GameSession>().GameUnPause();
         FindObjectOfType<Level>().TurnMenuOff();
-        FindObjectOfType<Ball>().GameNotPausedLaunch();
     }
 
 }

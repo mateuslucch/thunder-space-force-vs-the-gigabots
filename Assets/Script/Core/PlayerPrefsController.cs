@@ -17,8 +17,7 @@ public class PlayerPrefsController : MonoBehaviour
     public static void SetMasterVolume(float volume)
     {
         if (volume >= MIN_VOLUME && volume <= MAX_VOLUME)
-        {
-            //Debug.Log("Master volume set to " + volume);
+        {            
             PlayerPrefs.SetFloat(MASTER_VOLUME_KEY, volume);
         }
         else
@@ -29,8 +28,7 @@ public class PlayerPrefsController : MonoBehaviour
     public static void SetSfxVolume(float volume)
     {
         if (volume >= SFX_MIN && volume <= SFX_MAX)
-        {
-            //Debug.Log("SFX volume set to " + volume);
+        {            
             PlayerPrefs.SetFloat(SFX_VOLUME_KEY, volume);
         }
         else

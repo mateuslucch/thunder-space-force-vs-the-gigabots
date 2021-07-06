@@ -6,21 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class Level : MonoBehaviour
 {
-    //parameters
 
+    //parameters
     [SerializeField] TextMeshProUGUI numberBlocks;
     [SerializeField] TextMeshProUGUI gameStatus;
     [SerializeField] TextMeshProUGUI levelNumber;
     [SerializeField] int levelNumberFactor = 0;
 
-    int breakableBlocks; //serializedfield for debugging purpose
+    int breakableBlocks;
     int winBlocks;
     bool levelEnded = false;
 
     //bolas
     [SerializeField] int ballLives = 3;
     [SerializeField] TextMeshProUGUI ballLivesText;
-    float numberBalls = 1f;
+    int numberBalls = 1;
 
     //cached reference    
     SceneLoader sceneloader;
@@ -37,20 +37,17 @@ public class Level : MonoBehaviour
 
     private void Start()
     {
-        if (FindObjectOfType<MusicPlayer>()) // checking for tests, evitar erros se nao tiver o objeto
+        if (FindObjectOfType<MusicPlayer>())
         {
-            FindObjectOfType<MusicPlayer>().ChangeSong(); //troca de musica a cada fase nova
+            FindObjectOfType<MusicPlayer>().ChangeSong();
         }
-        else { Debug.Log("there is no musicplayerhere"); }
+        else { Debug.Log("there is no musicplayer here"); }
 
-        gameStatus.gameObject.SetActive(false); //esconde texto
-
+        gameStatus.gameObject.SetActive(false);
         sceneloader = FindObjectOfType<SceneLoader>();
-        FindObjectOfType<GameSession>().UpdateScore(); //nao ta sendo usado
-        ballLivesText.text = ("Lives: " + ballLives); //atualiza texto de vidas
+        ballLivesText.text = ("Lives: " + ballLives);
 
-        //cursor mouse,USAR APENAS PARA DESKTOP!!!
-        //CursorLocked();
+
 
         inGameMenu.SetActive(false);
 
@@ -58,25 +55,11 @@ public class Level : MonoBehaviour
         levelNumber.text = ("Level ") + (currentSceneIndex - 1).ToString();//mostra numero da fase
     }
 
-    private static void CursorLocked() //USAR SÓ NO DESKTOP
-    {
-        //PARA DESBLOQUEAR NO BROWSER, SÓ IGNORAR ESSA PARTE
-        //Cursor.visible = false;
-        //Cursor.lockState = CursorLockMode.Locked;
-        //FIM
-    }
-
-    private static void CursorUnlocked()
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
     private void Update()
     {
         if (levelEnded == false)
         {
-            if (Input.GetKeyDown("escape")) //abre menu
+            if (Input.GetKeyDown("escape")) //open menu
             {
                 TurnMenuOn();
             }
@@ -85,21 +68,17 @@ public class Level : MonoBehaviour
 
     public void TurnMenuOn()
     {
-        FindObjectOfType<Ball>().GamePausedDontLaunch();
         FindObjectOfType<PaddleMove>().PaddlePause();
         FindObjectOfType<GameSession>().GamePause();
         inGameMenu.SetActive(true);
-        CursorUnlocked();
     }
 
     public void TurnMenuOff()
     {
         inGameMenu.SetActive(false);
-        CursorLocked();
     }
 
-    public void CountBlocks() //Cada bloco tem o mesmo script. 
-                              //Quando a fase inicia, o script é lido na mesma quantidade de blocos. Cada lida, acrescenta +1 na variável "breakableBlocks"
+    public void CountBlocks()
     {
         breakableBlocks++;
         numberBlocks.text = ("Blocks Left: ") + breakableBlocks.ToString();
@@ -109,7 +88,6 @@ public class Level : MonoBehaviour
     {
         winBlocks++;
     }
-    //termina start
 
     public void WinBlocksDestroyed() //desconta blocos especiais do total e do numero de especiais
     {
@@ -117,13 +95,12 @@ public class Level : MonoBehaviour
         breakableBlocks--;
         count();
 
-        //escolher duas formas de vencer destruindo blocos especiais
-
+        //VITÓRIA COM BLOCOS ESPECIAIS
         //vitoria se só um bloco especial for destruido
         StartCoroutine(WinnerPath());
 
         /* //vitoria se todos blocos especiais forem destruidos
-        if (winBlocks <= 0) //condição de vitória, caso só os blocos de vitória são destruídos
+        if (winBlocks <= 0)
         {
             StartCoroutine(WinnerPath());
         }
@@ -148,21 +125,7 @@ public class Level : MonoBehaviour
     //!!!!!!!IMPORTANTE, APRESENTA TODOS OS BLOCOS DESTRUTIVEIS, INDEPENDENTE DE SEREM ESPECIAIS OU NÃO
     private void count() //apresenta no canvas o numero de blocos faltando, rodasempre que um bloco é destruido
     {
-
         numberBlocks.text = ("Blocks Left: ") + breakableBlocks.ToString();
-        //PARA TESTES
-        //lança powerups em todos (menos o primeiro)
-        /*
-        allGenericBlocks = GameObject.FindGameObjectsWithTag("Breakable");
-        for (var i = 0; i < allGenericBlocks.Length; i++)
-        {
-            actualBlock = allGenericBlocks[i].GetComponent<Block>();
-            actualBlock.PowerUpTrue();
-
-        }
-        */
-
-        //FINAL TESTES
     }
 
     //GANHA VIDA EXTRA Do POWERUP!!
@@ -172,14 +135,19 @@ public class Level : MonoBehaviour
         ballLivesText.text = ("Lives: " + ballLives);
     }
 
+    public int NumberLife()
+    {
+        return ballLives;
+    }
+
     //extraballs!!!  e também EVITAR PERDA DE VIDA, QUANDO TIVER MULTIPLAS BOLAS, chamado pelo powerup
-    public void AddBall()//chamado pelo powerup
+    public void AddBall()
     {
         numberBalls++;
     }
-    public void ExtraBallsMethods() //chamado pelo lose collider
+    public void ExtraBallsMethods()
     {
-        if (numberBalls >= 2f)
+        if (numberBalls >= 2)
         {
             numberBalls--;
         }
@@ -187,6 +155,10 @@ public class Level : MonoBehaviour
         {
             FindObjectOfType<Level>().LosePath();
         }
+    }
+    public int NumberBalls()
+    {
+        return numberBalls; //retorna o numero de bolas pra classe que precisar
     }
     //end extraBalls methods
 
@@ -200,23 +172,16 @@ public class Level : MonoBehaviour
         {
             gameStatus.gameObject.SetActive(true);
 
-            //ULTRAPASSADO//AudioSource.PlayClipAtPoint(youLoseSound, Camera.main.transform.position,soundLevel.SfxVolume());
             AudioSource.PlayClipAtPoint(youLoseSound, Camera.main.transform.position, PlayerPrefsController.GetMasterVolume());
 
             gameStatus.text = ("Game Over!!");
             StartCoroutine(PausaLose());
-            CursorUnlocked();
 
             DestroyThings();
             levelEnded = true;
-
         }
-        else //reinicia
-        {
-            FindObjectOfType<Ball>().RestartBallToPaddle();
-        }
-
     }
+
     IEnumerator PausaLose() //pausa antes de começar nova fase
     {
         yield return new WaitForSecondsRealtime(3);
@@ -230,8 +195,7 @@ public class Level : MonoBehaviour
         FindObjectOfType<GameSession>().TotalScore();
         gameStatus.gameObject.SetActive(true);
         gameStatus.text = ("You Win!!");
-        levelEnded = true; //bloqueia o menu 
-        CursorUnlocked();
+        levelEnded = true; //bloqueia o menu         
         DestroyThings();
         yield return StartCoroutine(DestroyLastBlocks());
         StartCoroutine(PausaWin());  //tempo antes de saltar para próxima scene

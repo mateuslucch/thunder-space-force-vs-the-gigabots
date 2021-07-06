@@ -43,6 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 142173d8d8f9fa2458d99e48396c0b93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxBlocksToPowerup: 3
+  maxBlocksToPowerup: 2
   minBlocksToPowerup: 4
   blocksToPowerup: 0

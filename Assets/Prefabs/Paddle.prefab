@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 4034119321567648}
   - component: {fileID: 728486259275253815}
   - component: {fileID: 114804969000129444}
+  - component: {fileID: 1906179895057969255}
+  - component: {fileID: 780022183535522343}
   - component: {fileID: 1929554981}
   - component: {fileID: 8496838947764756545}
   m_Layer: 8
@@ -51,13 +53,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e050eb01bf3578d429833f760d2f3959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minX: 3.4
-  maxX: 12.6
+  minStandartX: 3.4
+  maxStandartX: 12.6
   extendedMaxBounds: 11
   extendedMinBounds: 5
-  mouseSensivity: 6
-  paddleSpeed: 10
-  screenWidthInUnitsx: 16
+  paddleSpeed: 13
+  totalExtraShipTime: 15
   ballObject: {fileID: 0}
 --- !u!114 &114804969000129444
 MonoBehaviour:
@@ -79,6 +80,34 @@ MonoBehaviour:
   guns:
   - {fileID: 8738326744788852470}
   - {fileID: 8459098891943992383}
+--- !u!114 &1906179895057969255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565450979435116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dad8058bb87deb840829666c1918fa4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magnetsTime: 10
+--- !u!114 &780022183535522343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565450979435116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4553c66d1b0229140bd07e95dfd8583b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballPrefab: {fileID: 1012983102726696, guid: b50993c235a7d5a40ab66d227abe1eac, type: 3}
+  startOffset: {x: 0, y: 0.1, z: 0}
+  ballLaunch: {fileID: 8300000, guid: c1a1a50ba31b9fe49bcb4aea07bf5d00, type: 3}
 --- !u!95 &1929554981
 Animator:
   serializedVersion: 3
@@ -284,6 +313,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Extra Paddle Right
       objectReference: {fileID: 0}
+    - target: {fileID: 1565450979435116, guid: 93887d9f67818c240abe001a34371e30, type: 3}
+      propertyPath: m_TagString
+      value: ExtraPaddle
+      objectReference: {fileID: 0}
     - target: {fileID: 4034119321567648, guid: 93887d9f67818c240abe001a34371e30, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -346,6 +379,10 @@ PrefabInstance:
     - target: {fileID: 1565450979435116, guid: 93887d9f67818c240abe001a34371e30, type: 3}
       propertyPath: m_Name
       value: Extra Paddle Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 1565450979435116, guid: 93887d9f67818c240abe001a34371e30, type: 3}
+      propertyPath: m_TagString
+      value: ExtraPaddle
       objectReference: {fileID: 0}
     - target: {fileID: 4034119321567648, guid: 93887d9f67818c240abe001a34371e30, type: 3}
       propertyPath: m_RootOrder

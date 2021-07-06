@@ -36,13 +36,12 @@ public class PowerUp : MonoBehaviour
             spriteRenderer.sprite = powerUpSprites[pUElement];
         }
 
-        //usar para testes individuais
+        //usar para testes multiplos
         //pUElement = Random.Range(0,2);  
+        //usar para testes individuais
         //pUElement = 2;
 
         spriteRenderer.sprite = powerUpSprites[pUElement];
-        //Debug.Log(rand);
-        //Debug.Log(pUElement);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -53,27 +52,25 @@ public class PowerUp : MonoBehaviour
 
             if (pUElement == 0) //magnets OK!!!
             {
-                FindObjectOfType<Ball>().MagnetBall();
-
+                FindObjectOfType<MagnetPower>().MagnetsOn();
             }
             if (pUElement == 1)  //chamar mais bolas...ok!!
             {
-                FindObjectOfType<Ball>().ExtraBalls(); //adiciona uma bola "instantiate" a partir de outra
-                FindObjectOfType<Level>().AddBall(); //adiciona +1 na conta de bolas
+                FindObjectOfType<Ball>().ExtraBalls(); //instatiate
+                FindObjectOfType<Level>().AddBall(); //increase count
             }
             if (pUElement == 2) //extra ships OK!
             {
-                FindObjectOfType<PaddleMove>().ExtraPaddles();
+                FindObjectOfType<PaddleMove>().ExtraShip();
             }
-            if (pUElement == 3) //lasers 
+            if (pUElement == 3) //lasers ok!!
             {
                 FindObjectOfType<Paddle>().ActivateLasers();
             }
             if (pUElement == 4) //vida extra OK!!
             {
                 FindObjectOfType<Level>().ExtraLife();
-            }
-            //ADICIONAR MAIS????????
+            }         
 
         }
 

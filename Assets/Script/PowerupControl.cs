@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PowerupControl : MonoBehaviour
 {
-    [SerializeField] int maxBlocksToPowerup = 3; //const
-    [SerializeField] int minBlocksToPowerup = 4; //const
+    [SerializeField] int maxBlocksToPowerup = 3;
+    [SerializeField] int minBlocksToPowerup = 4;
     [SerializeField] int blocksToPowerup;
 
     private void Start()
@@ -14,15 +14,14 @@ public class PowerupControl : MonoBehaviour
     }
 
     public bool CountBlocksToPowerup(bool releasePowerup)
-    {        
+    {
         blocksToPowerup--;
         if (blocksToPowerup == 0)
-        {
-            Debug.Log("powerup liberado");
+        {            
             blocksToPowerup = Random.Range(minBlocksToPowerup, maxBlocksToPowerup);
             releasePowerup = true;
         }
-        else { releasePowerup = false;}
+        else { releasePowerup = false; }
         return releasePowerup;
     }
 

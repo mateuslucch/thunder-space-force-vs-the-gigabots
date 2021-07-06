@@ -48,6 +48,7 @@ public class OptionsController : MonoBehaviour
     public void SetDefaults()
     {
         volumeSlider.value = defaultMusicVolume;
+        sfxSlider.value = defaultSFX;
     }
 
 }

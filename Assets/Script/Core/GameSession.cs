@@ -55,7 +55,7 @@ public class GameSession : MonoBehaviour
     }
     public void SceneManagement()
     {
-        currentSceneIndex++;        
+        currentSceneIndex++;
     }
 
     //showscore busca valor do score
@@ -68,13 +68,11 @@ public class GameSession : MonoBehaviour
     public void AddToScore()
     {
         currentScore = currentScore + pointPerBlockDestroyed;
-        //scoreText.text = ("Score: ") + currentScore.ToString();
     }
 
     public void TotalScore() //atualiza o score total se ganhar
     {
         totalScore = currentScore;
-        //scoreText.text = ("Score: ") + totalScore.ToString();
     }
 
     public void UpdateScore()
@@ -97,9 +95,7 @@ public class GameSession : MonoBehaviour
     //Rollback the score and Restart the last level 
     public void RestartLastLevel()
     {
-
         SceneManager.LoadScene(currentSceneIndex);
-        currentScore = totalScore; //rollback do score, só quando perde
-        //scoreText.text = ("Score: ") + currentScore.ToString(); //atualiza o texto do score
+        currentScore = totalScore; //rollback do score, só quando perde        
     }
 }

@@ -5,19 +5,23 @@ using UnityEngine;
 public class PaddleMove : MonoBehaviour
 {
     [Header("MoveWithControls")]
-    [SerializeField] float minX = 3.4f;
-    [SerializeField] float maxX = 12.6f;
+    [SerializeField] float minStandartX = 3.4f;
+    [SerializeField] float maxStandartX = 12.6f;
     [SerializeField] float extendedMaxBounds = 0f;
-    [SerializeField] float extendedMinBounds = 0f;    
-    [SerializeField] float mouseSensivity = 6f; //usar no desktop
+    [SerializeField] float extendedMinBounds = 0f;
     [SerializeField] float paddleSpeed = 1f;
 
-    [SerializeField] float screenWidthInUnitsx = 16f; //usar para browser
+    float minX = 3.4f;
+    float maxX = 12.6f;
+
+    [SerializeField] float totalExtraShipTime = 10f;
     [SerializeField] GameObject ballObject;
+
     bool paddlePaused = false;
+    bool extraShipActive;
+    float extraShipTime;
 
     Animator myAnimator;
-
     Vector2 paddlePos; //usado quando mouse unico controle
     GameSession theGameSession;
     Ball theBall;
@@ -27,30 +31,30 @@ public class PaddleMove : MonoBehaviour
         myAnimator = GetComponent<Animator>();
         theGameSession = FindObjectOfType<GameSession>();
         theBall = FindObjectOfType<Ball>();
-        theBall.StartBall();
     }
 
     void Update()
     {
-        //ORIGINAL!! NÃO USAR EM DESKTOP
-        //PARA POSIÇÃO DO MOUSE
-        //Debug.Log(Input.mousePosition.x / Screen.width * screenWidthInUnitsx);               //mostrar a posição do mouse no Debug, com .y só mostra de y
-        //float mousePosInUnits1 = (Input.mousePosition.x / Screen.width * screenWidthInUnitsx); //OLD
-        //float mousePosInUnits2 = (Input.mousePosition.y / Screen.width * screenWidthInUnitsy);
 
         if (paddlePaused == false) //condição, trocada quando abre e fecha menu
         {
-            //ORIGINAL. NÃO USAR NO DESKTOP
-            /*
-            Debug.Log(GetXPos());
-            Vector2 paddlePos = new Vector2(transform.position.x, transform.position.y); //"transform.position.y" mantém na posição y que está no unity
-            paddlePos.x = Mathf.Clamp(GetXPos(), minX, maxX);
-            transform.position = paddlePos;
-            */
-
-            //COMANDOS USAR COM TECLADO
             MoveWithControls();
         }
+
+        if (extraShipTime > 0)
+        {
+            extraShipTime -= Time.deltaTime;
+        }
+        else
+        {
+            ReturnExtraShip();
+        }
+    }
+
+    private void MoveWithControls()
+    {
+        float deltaX = Input.GetAxisRaw("Horizontal") * paddleSpeed * Time.deltaTime;
+        MoveObject(deltaX);
     }
 
     public void MoveWithTouch(int direction)
@@ -60,15 +64,9 @@ public class PaddleMove : MonoBehaviour
         MoveObject(deltaX);
     }
 
-    private void MoveWithControls()
-    {
-        float deltaX = Input.GetAxisRaw("Horizontal") * paddleSpeed * Time.deltaTime;
-        MoveObject(deltaX);
-    }
-
     private void MoveObject(float deltaX)
     {
-        var newXPos = Mathf.Clamp(transform.position.x + deltaX, minX, maxX);  //"Mathf.Clamp(posição do objeto + incremento, "limite minimo", "limite máximo")"
+        var newXPos = Mathf.Clamp(transform.position.x + deltaX, minX, maxX);
         transform.position = new Vector2(newXPos, transform.position.y);
     }
 
@@ -80,40 +78,39 @@ public class PaddleMove : MonoBehaviour
         }
         else
         {
-            //quando trocar lembrar de trocar nas configs de input na unity
-            //USAR NO BROWSER
-            //return Input.mousePosition.x / Screen.width * screenWidthInUnitsx;
-            //USAR NO DESKTOP
             return Input.GetAxis("Horizontal");
-            //usar no android
-            //????
         }
     }
 
     //inicio extra paddle
-    public void ExtraPaddles()
+    public void ExtraShip()
     {
-        myAnimator.SetBool("Enlarge", true);
-        StartCoroutine(ExtraPaddleRoutine());
-        minX = extendedMinBounds;
-        maxX = extendedMaxBounds;
+        if (extraShipActive == false)
+        {
+            extraShipActive = true;
+            myAnimator.SetBool("ExtraShip", true);
+            minX = extendedMinBounds;
+            maxX = extendedMaxBounds;
+        }
+        extraShipTime = totalExtraShipTime;
     }
 
-    IEnumerator ExtraPaddleRoutine()
+    private void ReturnExtraShip()
     {
-        yield return new WaitForSecondsRealtime(10); //conta tempo, antes de executar o proximo                                                   
-
-        myAnimator.SetBool("Desenlarge", true);
-        myAnimator.SetBool("Enlarge", false);
-        minX = 3.4f;
-        maxX = 12.6f;
+        if (extraShipActive == true)
+        {
+            extraShipActive = false;
+            myAnimator.SetBool("SingleShip", true);
+            myAnimator.SetBool("ExtraShip", false);
+            minX = minStandartX;
+            maxX = maxStandartX;
+        }
     }
-
-    public void EnlargeIdle() //chamado quando termina o desenlarge(EVENTO)
+    public void EnlargeIdle()
     {
-        myAnimator.SetBool("Desenlarge", false);
+        myAnimator.SetBool("SingleShip", false);
     }
-    //fim enlarge paddle
+    //fim extra ships
 
     public void PaddlePause()
     {

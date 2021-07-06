@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 50245053586643732}
   - component: {fileID: 58892782627642384}
   - component: {fileID: 82780564393917562}
+  - component: {fileID: 1240186335893680892}
   - component: {fileID: 114217121835476982}
   m_Layer: 11
   m_Name: Ball
@@ -29,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1012983102726696}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8, y: 0.605, z: -1}
+  m_LocalPosition: {x: 7.209466, y: 1.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -106,7 +107,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!58 &58892782627642384
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -219,6 +220,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1240186335893680892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012983102726696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40952dfef079a66468f9471a27755e2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xPush: 0
+  yPush: 15
+  randomFactorY: 0
+  randomFactorX: 0
+  xVel: 5
+  yVel: 10
 --- !u!114 &114217121835476982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,15 +250,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 489978ff38bc635458b3c34e74e48433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  other2: {fileID: 1012983102726696}
-  paddle1: {fileID: 0}
-  xPush: 0
-  yPush: 10
   ballSounds: {fileID: 8300000, guid: d8636e640eea7dc439efa6dc4ea49bdb, type: 3}
-  ballLaunch: {fileID: 8300000, guid: c1a1a50ba31b9fe49bcb4aea07bf5d00, type: 3}
-  randomFactorY: 0
-  randomFactorX: 0
-  magnetsPower: 0
-  magnetsTime: 15
-  xVel: 0
-  yVel: 10

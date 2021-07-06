@@ -12,36 +12,38 @@ public class Paddle : MonoBehaviour
     [SerializeField] float timeShooting = 5f;
     [SerializeField] GameObject[] guns;
 
+    float timeToStop;
     float shotCounter;
 
     bool firePowerUp = false;
 
     void Update()
     {
-        if (firePowerUp == true)
+        if (timeToStop > 0)
         {
             CountDownAndShoot();
+            timeToStop -= Time.deltaTime;
         }
+        
     }
 
     //lasers!!
     public void ActivateLasers()
     {
-        firePowerUp = true;
-        StartCoroutine(StopLasers());
+        timeToStop = timeShooting;
     }
-    
+
     private void CountDownAndShoot()
     {
         shotCounter -= Time.deltaTime;
         if (shotCounter <= 0f)
         {
             foreach (GameObject gun in guns)
-            {                
+            {
                 Fire(gun.transform.position);
             }
             shotCounter = shotFrequency;
-        }
+        }        
     }
 
     private void Fire(Vector3 gunPosition)
@@ -52,11 +54,5 @@ public class Paddle : MonoBehaviour
                    transform.rotation) as GameObject; //ver o que cada coisa faz
         paddleLaser.GetComponent<Rigidbody2D>().velocity = new Vector2(0, projectileSpeed);
     }
-    IEnumerator StopLasers()
-    {
-        yield return new WaitForSecondsRealtime(timeShooting);
-        firePowerUp = false;
-    }
-    //End Lasers!!
 
 }
