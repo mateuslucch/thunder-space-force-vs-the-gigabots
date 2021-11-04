@@ -9,6 +9,8 @@ public class PowerUp : MonoBehaviour
 
     //variaveis de sprites
     [SerializeField] public Sprite[] powerUpSprites;
+    [SerializeField] AudioClip[] powerUpSFX;
+
     int pUElement;
 
     private SpriteRenderer spriteRenderer;
@@ -39,7 +41,7 @@ public class PowerUp : MonoBehaviour
         //usar para testes multiplos
         //pUElement = Random.Range(0,2);  
         //usar para testes individuais
-        //pUElement = 2;
+        //pUElement = 3;
 
         spriteRenderer.sprite = powerUpSprites[pUElement];
     }
@@ -48,8 +50,9 @@ public class PowerUp : MonoBehaviour
     {
         if (collision.gameObject.tag == "Paddle" || collision.gameObject.tag == "ExtraPaddle")
         {
+            AudioSource.PlayClipAtPoint(powerUpSFX[pUElement], Camera.main.transform.position, PlayerPrefsController.GetSfxVolume());
             Destroy(gameObject);
-
+            
             if (pUElement == 0) //magnets OK!!!
             {
                 FindObjectOfType<MagnetPower>().MagnetsOn();

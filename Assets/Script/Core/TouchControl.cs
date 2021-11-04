@@ -27,7 +27,7 @@ public class TouchControl : MonoBehaviour
                 if (hits.collider.name == "Left Button")
                 {
                     direction = -1;
-                    FindObjectOfType<PaddleMove>().MoveWithTouch(direction);
+                    FindObjectOfType<PaddleMove>().MoveWithTouch(direction); // TROCAR ESSE FINDOBJECT!!!!
                 }
 
                 if (hits.collider.name == "Right Button")

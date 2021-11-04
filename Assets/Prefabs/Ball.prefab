@@ -233,10 +233,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xPush: 0
-  yPush: 15
+  yPush: 12
   randomFactorY: 0
   randomFactorX: 0
-  xVel: 5
+  xVel: 2
   yVel: 10
 --- !u!114 &114217121835476982
 MonoBehaviour:

@@ -13,12 +13,13 @@ public class GameSession : MonoBehaviour
     [SerializeField] bool isAutoPlayEnabled;
     [SerializeField] int lastScene;
 
-
     //state variables
-    int currentScore = 0;
+    ShowScore showScore;
+    int currentScore = 0; //gameplay score
     int totalScore = 0;
+    int startScore = 0; //score when starting level
 
-    [SerializeField] int currentSceneIndex;
+    int currentSceneIndex;
 
     private void Awake()
     {
@@ -31,59 +32,72 @@ public class GameSession : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject);
         }
-
     }
 
     private void Start()
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex; //busca o valor da primeira scene quando gamesession é carregado
         realTimeSpeed = gameSpeed;
+        StartLevel();
     }
 
     void Update()
     {
-        Time.timeScale = realTimeSpeed;
+        Time.timeScale = realTimeSpeed; //!!!!
     }
 
     public void GamePause()
     {
         realTimeSpeed = 0f;
     }
+
     public void GameUnPause()
     {
         realTimeSpeed = gameSpeed;
     }
+
     public void SceneManagement()
     {
-        currentSceneIndex++;
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        //currentSceneIndex++;
     }
 
-    //showscore busca valor do score
+    public void AddToScore()
+    {
+        currentScore = currentScore + pointPerBlockDestroyed;
+        UpdateScore();
+    }
+
+    public void UpdateScore()
+    {
+        showScore.UpdateScore(currentScore);
+    }
+
     public int GetScore()
     {
         return currentScore;
     }
 
-    //Processo contar Score
-    public void AddToScore()
-    {
-        currentScore = currentScore + pointPerBlockDestroyed;
-    }
-
     public void TotalScore() //atualiza o score total se ganhar
     {
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         totalScore = currentScore;
+        startScore = currentScore;
+        currentScore = 0;
+        //FindObjectOfType<LeaderboardUpdate>().UpdateLeaderboard(totalScore);
     }
 
-    public void UpdateScore()
-    {
-        //FindObjectOfType<ShowScore>().AddToScore(totalScore);
-    }
-
-    //processo resetar GameSession
+    //processo "resetar" GameSession
     public void ResetGame() //o método é chamado no arquivo SceneLoader.cs, dependendo do botão que clica no jogo
     {
         Destroy(gameObject);
+    }
+
+    private void StartLevel()
+    {
+        currentScore = totalScore;
+        showScore = FindObjectOfType<ShowScore>();
+        showScore.UpdateScore(currentScore);
     }
 
     //Processo Autoplay testes
@@ -92,10 +106,10 @@ public class GameSession : MonoBehaviour
         return isAutoPlayEnabled;
     }
 
-    //Rollback the score and Restart the last level 
+    //Rollback the score and Restart the level
     public void RestartLastLevel()
     {
-        SceneManager.LoadScene(currentSceneIndex);
-        currentScore = totalScore; //rollback do score, só quando perde        
+        FindObjectOfType<SceneLoader>().RestartLevel(lastScene);
+        currentScore = startScore; //rollback do score, só quando perde        
     }
 }

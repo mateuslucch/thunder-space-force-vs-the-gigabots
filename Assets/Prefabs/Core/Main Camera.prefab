@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 20188137695721000}
   - component: {fileID: 124222556310016928}
   - component: {fileID: 81353961672371216}
+  - component: {fileID: 630327875}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -57,11 +58,11 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 100
   field of view: 60
   orthographic: 1
   orthographic size: 6
-  m_Depth: -1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -92,3 +93,22 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376605374343886}
   m_Enabled: 1
+--- !u!114 &630327875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376605374343886}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8d456cf79d06214b936101a88e59d38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curShader: {fileID: 4800000, guid: 7ad8bf463e9087f4fb95f50340507ec5, type: 3}
+  Distortion: 0.05
+  InputGamma: 2.5
+  OutputGamma: 1.5
+  TextureSize: {x: 1620, y: 2160}
+  RGB1: {x: 1, y: 0.7, z: 1}
+  RGB2: {x: 1, y: 1, z: 0.7}

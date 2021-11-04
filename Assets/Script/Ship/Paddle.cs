@@ -24,13 +24,18 @@ public class Paddle : MonoBehaviour
             CountDownAndShoot();
             timeToStop -= Time.deltaTime;
         }
-        
+
     }
 
     //lasers!!
     public void ActivateLasers()
     {
         timeToStop = timeShooting;
+    }
+
+    public void StopLasers()// parar quando jogo encerra, evitar pontos extras
+    {
+        timeToStop = 0f;
     }
 
     private void CountDownAndShoot()
@@ -43,7 +48,7 @@ public class Paddle : MonoBehaviour
                 Fire(gun.transform.position);
             }
             shotCounter = shotFrequency;
-        }        
+        }
     }
 
     private void Fire(Vector3 gunPosition)

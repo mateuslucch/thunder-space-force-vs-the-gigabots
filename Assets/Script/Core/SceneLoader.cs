@@ -5,6 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
+    int actualSceneIndex;
+
+    private void Start()
+    {
+        actualSceneIndex = SceneManager.GetActiveScene().buildIndex;
+    }
 
     void Update()
     {
@@ -12,18 +18,18 @@ public class SceneLoader : MonoBehaviour
         //TROCA DE CENA USANDO L E K
         if (Input.GetKeyDown(KeyCode.L))
         {
-            LoadNextScene();
+            //LoadNextScene();
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            LoadPreviosScene();
+            //LoadPreviosScene();
         }
     }
 
-    public void LoadNextScene() //Carrega próxima scene, em relação a atual, usado quando passa de fase
+    public void LoadNextScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex + 1); //Posição da cena atual + 1 para abrir a próxima cena
+        SceneManager.LoadScene(currentSceneIndex + 1);
     }
 
     public void LoadPreviosScene()
@@ -32,37 +38,36 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex - 1);
     }
 
-    public void LoadMainMenu() //Carregar menu inicial e reseta configs
+    public void LoadMainMenu()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene("Start Menu"); //pode usar 0, MENU inicial é numero 0 (NÃO MAIS, AGORA É 1)
+        SceneManager.LoadScene("Start Menu");
 
-        if (FindObjectOfType<MusicPlayer>()) //nao dar erro quando termina splashscreen (a mesma tenta chamar)
+        if (FindObjectOfType<MusicPlayer>())
         {
             FindObjectOfType<MusicPlayer>().MainMenuSong();
         }
         if (FindObjectOfType<GameSession>() && FindObjectOfType<OptionsController>())
         {
-            FindObjectOfType<GameSession>().ResetGame(); //vai buscar o ResetGame em GameStatus.cs!!!
-            FindObjectOfType<OptionsController>().SaveAndExit(); //SALVA MUDANÇAS no optionscontroller
+            FindObjectOfType<GameSession>().ResetGame();
         }
     }
 
-    public void LoadGameScene() //carrega primeira cena (primeiro level no caso)//ESTÁ SENDO USADO???
+    public void LoadGameScene()
     {
+        if (FindObjectOfType<GameSession>() && FindObjectOfType<OptionsController>())
+        {
+            FindObjectOfType<GameSession>().ResetGame();
+            FindObjectOfType<OptionsController>().SaveAndExit();
+        }
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
         FindObjectOfType<GameSession>().ResetGame();
         if (FindObjectOfType<OptionsController>())
         {
-            FindObjectOfType<OptionsController>().SaveAndExit(); //SALVA MUDANÇAS no optionscontroller
+            FindObjectOfType<OptionsController>().SaveAndExit();
         }
-        SceneManager.LoadScene("Level1"); //pode usar 1 aqui, cena inicial é numero 0(start menu)
-    }
-
-    public void RestartLevel()
-    {
-        FindObjectOfType<GameSession>().RestartLastLevel();
+        SceneManager.LoadScene("Level1");
     }
 
     public void QuitGame()
@@ -70,20 +75,43 @@ public class SceneLoader : MonoBehaviour
         Application.Quit();
     }
 
-    public void LoadLevelOne() //carrega primeira cena (primeiro level no caso)
+    public void LoadLevelOne()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
-        SceneManager.LoadScene("Level1"); //pode usar 1 aqui SEM ASPAS, se lvl 1 for cena 1, cena inicial é numero 0(start menu)
+        SceneManager.LoadScene("Level1");
         FindObjectOfType<OptionsController>().SaveAndExit();
+    }
+
+    public void LoadNextLevel()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex + 1);
+    }
+
+    public void RestartLevel(int levelSceneIndex)
+    {
+        SceneManager.LoadScene(levelSceneIndex);
+        //call last scene
+        FindObjectOfType<GameSession>().RestartLastLevel(); //reset score
+    }
+
+    public void ReturnSceneIndex()
+    {
+
     }
 
     public void ReturnToGame()
     {
-        FindObjectOfType<OptionsController>().SaveAndExit(); //SALVA MUDANÇAS no optionscontroller
+        FindObjectOfType<OptionsController>().SaveAndExit();
         FindObjectOfType<PaddleMove>().PaddleUnPause();
         FindObjectOfType<GameSession>().GameUnPause();
         FindObjectOfType<Level>().TurnMenuOff();
+    }
+
+    public void ManualScene()
+    {
+        SceneManager.LoadScene("Manual Scene");
     }
 
 }

@@ -8,17 +8,19 @@ public class ShowScore : MonoBehaviour
 
     TextMeshProUGUI scoreText;
     GameSession gameSession;
-    
+
     void Start()
     {
         scoreText = GetComponent<TextMeshProUGUI>();
-        //gameSession = FindObjectOfType<GameSession>();
-
+        gameSession = FindObjectOfType<GameSession>();
     }
 
-    void Update()
+    public void UpdateScore(int score)
     {
-        scoreText.text = ("Score: ") + FindObjectOfType<GameSession>().GetScore().ToString();
+        if (scoreText != null)
+        {
+            scoreText.text = ("Score: \n") + score;
+        }
+        else { print("There is no scorebox"); }
     }
-
 }

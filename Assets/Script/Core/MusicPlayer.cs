@@ -9,14 +9,14 @@ public class MusicPlayer : MonoBehaviour
     [SerializeField] AudioClip[] musicList;
     [SerializeField] int firstLevelMusic = 2;
     [SerializeField] int mainMenuMusic = 1;
+    [SerializeField] GameConfig musicConfig;
+
     AudioSource myAudioSource;
     int singleMusic;
     float musicVolume;
 
-    [SerializeField] GameConfig musicConfig;
-
     private void Awake()
-    {        
+    {
         int playerMusic = FindObjectsOfType<MusicPlayer>().Length;
         if (playerMusic > 1)
         {
@@ -51,8 +51,7 @@ public class MusicPlayer : MonoBehaviour
         }
         else
         {
-            singleMusic = Random.Range(firstLevelMusic, musicList.Length);            
-            Debug.Log(singleMusic);
+            singleMusic = Random.Range(firstLevelMusic, musicList.Length);
             PlayMusic();
         }
     }

@@ -45,14 +45,12 @@ public class Level : MonoBehaviour
 
         gameStatus.gameObject.SetActive(false);
         sceneloader = FindObjectOfType<SceneLoader>();
-        ballLivesText.text = ("Lives: " + ballLives);
-
-
+        ballLivesText.text = ("Lives: \n" + ballLives);
 
         inGameMenu.SetActive(false);
 
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex - levelNumberFactor;//captura numero da cena
-        levelNumber.text = ("Level ") + (currentSceneIndex - 1).ToString();//mostra numero da fase
+        levelNumber.text = ("Level \n") + (currentSceneIndex - 1).ToString();//mostra numero da fase
     }
 
     private void Update()
@@ -81,7 +79,7 @@ public class Level : MonoBehaviour
     public void CountBlocks()
     {
         breakableBlocks++;
-        numberBlocks.text = ("Blocks Left: ") + breakableBlocks.ToString();
+        numberBlocks.text = ("Blocks Left: \n") + breakableBlocks.ToString();
     }
 
     public void WinBlocks() //apenas conta os blocos que dao vitoria direta (independente se tem outros)
@@ -93,7 +91,7 @@ public class Level : MonoBehaviour
     {
         winBlocks--;
         breakableBlocks--;
-        count();
+        Count();
 
         //VITÓRIA COM BLOCOS ESPECIAIS
         //vitoria se só um bloco especial for destruido
@@ -110,29 +108,28 @@ public class Level : MonoBehaviour
     public void BlockDestroyed()
     {
         breakableBlocks--;
-        count();
+        Count();
 
         if (breakableBlocks <= 0)  //condição de vitória, caso todos os blocos são destruídos
         {
             if (winBlocks <= 0) //se não tiver essa condição, ele da vitória só com os quebraveis
             {
                 StartCoroutine(WinnerPath());
-
             }
         }
     }
 
     //!!!!!!!IMPORTANTE, APRESENTA TODOS OS BLOCOS DESTRUTIVEIS, INDEPENDENTE DE SEREM ESPECIAIS OU NÃO
-    private void count() //apresenta no canvas o numero de blocos faltando, rodasempre que um bloco é destruido
+    private void Count() //apresenta no canvas o numero de blocos faltando, rodasempre que um bloco é destruido
     {
-        numberBlocks.text = ("Blocks Left: ") + breakableBlocks.ToString();
+        numberBlocks.text = ("Blocks Left: \n") + breakableBlocks.ToString();
     }
 
     //GANHA VIDA EXTRA Do POWERUP!!
     public void ExtraLife()
     {
         ballLives++;
-        ballLivesText.text = ("Lives: " + ballLives);
+        ballLivesText.text = ("Lives: \n" + ballLives);
     }
 
     public int NumberLife()
@@ -145,6 +142,7 @@ public class Level : MonoBehaviour
     {
         numberBalls++;
     }
+
     public void ExtraBallsMethods()
     {
         if (numberBalls >= 2)
@@ -156,6 +154,7 @@ public class Level : MonoBehaviour
             FindObjectOfType<Level>().LosePath();
         }
     }
+
     public int NumberBalls()
     {
         return numberBalls; //retorna o numero de bolas pra classe que precisar
@@ -167,9 +166,10 @@ public class Level : MonoBehaviour
     public void LosePath()
     {
         ballLives--;
-        ballLivesText.text = ("Lives: " + ballLives);
+        ballLivesText.text = ("Lives: \n" + ballLives);
         if (ballLives <= 0)
         {
+            //FindObjectOfType<GameSession>().TotalScore();
             gameStatus.gameObject.SetActive(true);
 
             AudioSource.PlayClipAtPoint(youLoseSound, Camera.main.transform.position, PlayerPrefsController.GetMasterVolume());
@@ -193,17 +193,30 @@ public class Level : MonoBehaviour
     {
         FindObjectOfType<GameSession>().SceneManagement();
         FindObjectOfType<GameSession>().TotalScore();
-        gameStatus.gameObject.SetActive(true);
-        gameStatus.text = ("You Win!!");
         levelEnded = true; //bloqueia o menu         
+        StopThings();
         DestroyThings();
         yield return StartCoroutine(DestroyLastBlocks());
-        StartCoroutine(PausaWin());  //tempo antes de saltar para próxima scene
+        gameStatus.gameObject.SetActive(true);
+        gameStatus.text = ("You Win!!");
+        StartCoroutine(PausaWin());  //pausa antes de saltar para próxima scene
     }
 
-    private void DestroyThings()
+    private void StopThings()
+    {
+        FindObjectOfType<Paddle>().StopLasers();
+    }
+
+    private void DestroyThings() //evitar várias coisas
     {
         Destroy(FindObjectOfType<LoseColider>()); //Destroi LoseColider quando ganha
+
+        //destruir lasers
+        GameObject[] lastLasersShots = GameObject.FindGameObjectsWithTag("Laser");
+        foreach (GameObject laser in lastLasersShots)
+        {
+            Destroy(laser);
+        }
 
         //destruir power ups, evitar bug quando contato com paddle após vitória
         lastPowerUps = GameObject.FindGameObjectsWithTag("PowerUp");
@@ -228,15 +241,46 @@ public class Level : MonoBehaviour
         lastBlocks = GameObject.FindGameObjectsWithTag("Breakable");
         yield return StartCoroutine(DestroyBlocks(lastBlocks));
 
-        lastBlocks = GameObject.FindGameObjectsWithTag("WinBlock");
+        lastBlocks = GameObject.FindGameObjectsWithTag("Unbreakable");
         yield return StartCoroutine(DestroyBlocks(lastBlocks));
 
-        lastBlocks = GameObject.FindGameObjectsWithTag("Unbreakable");
+        lastBlocks = GameObject.FindGameObjectsWithTag("WinBlock");
         yield return StartCoroutine(DestroyBlocks(lastBlocks));
     }
 
     IEnumerator DestroyBlocks(GameObject[] lastBlocks)
     {
+
+        int totalBlock = lastBlocks.Length;
+        List<GameObject> blocksToBeDestroyed = new List<GameObject>();
+        /*
+                foreach (GameObject block in lastBlocks)
+                {
+                    blocksToBeDestroyed.Add(block);
+                }
+                int multipleExplosion = blocksToBeDestroyed.Count;
+                while (blocksToBeDestroyed.Count > 0)
+                {
+
+                    for (var i = 0; i < blocksToBeDestroyed.Count; i++)
+                    {
+
+                        yield return new WaitForSecondsRealtime(0.1f);
+                        for (var j = 0; j < multipleExplosion; j++)
+                        {
+                            if (blocksToBeDestroyed[j] != null)
+                            {
+                                //print(blocksToBeDestroyed.Count);
+                                blocksToBeDestroyed[j].GetComponent<Block>().DestroyBlockFromOutside();
+                                blocksToBeDestroyed.RemoveAt(j); // indice fica nulo, ai é removido           
+                            }
+                        }
+                    }
+                    multipleExplosion -= 1;
+                }
+                */
+
+        //explosão que funciona
         foreach (GameObject blockToDestroyed in lastBlocks)
         {
             yield return new WaitForSecondsRealtime(0.1f);
@@ -245,12 +289,14 @@ public class Level : MonoBehaviour
                 blockToDestroyed.GetComponent<Block>().DestroyBlockFromOutside();
             }
         }
+
+
     }
 
     IEnumerator PausaWin()
     {
         yield return new WaitForSecondsRealtime(3f);
-        sceneloader.LoadNextScene(); //Roda o elemento LoadNextScene() do script SceneLoader.cs
+        sceneloader.LoadNextLevel(); //Roda o elemento LoadNextScene() do script SceneLoader.cs
     }
     //fim caminhos!!
 
