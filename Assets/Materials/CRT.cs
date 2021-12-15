@@ -13,6 +13,7 @@ public class CRT : MonoBehaviour
     private Material curMaterial;
     public Vector3 RGB1 = new Vector3(1.0f, 0.7f, 1.0f); //float3(1.0f, 0.7f, 1.0f)
     public Vector3 RGB2 = new Vector3(1.0f, 0.7f, 1.0f);//float3(0.7f, 1.0f, 0.7f)
+    [SerializeField] Camera mainCamera;
 
     #endregion
 
@@ -33,13 +34,24 @@ public class CRT : MonoBehaviour
 
     void Start()
     {
-        /*
-        if (!SystemInfo.supportsImageEffects)
+        if (mainCamera.pixelWidth - mainCamera.pixelHeight != TextureSize.x)
+        {
+            //TextureSize = new Vector2(mainCamera.pixelWidth - mainCamera.pixelHeight, mainCamera.pixelWidth - mainCamera.pixelHeight);
+        }
+        /* if (!SystemInfo.supportsImageEffects)
         {
             enabled = false;
             return;
+        } */
+
+    }
+
+    private void Update()
+    {
+        if (mainCamera.pixelWidth - mainCamera.pixelHeight != TextureSize.x)
+        {
+            //TextureSize = new Vector2(mainCamera.pixelWidth - mainCamera.pixelHeight, mainCamera.pixelWidth - mainCamera.pixelHeight);
         }
-        */
     }
 
     void OnRenderImage(RenderTexture sourceTexture, RenderTexture destTexture)
@@ -59,13 +71,6 @@ public class CRT : MonoBehaviour
             Graphics.Blit(sourceTexture, destTexture);
         }
 
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     void OnDisable()
@@ -74,8 +79,5 @@ public class CRT : MonoBehaviour
         {
             DestroyImmediate(curMaterial);
         }
-
     }
-
-
 }

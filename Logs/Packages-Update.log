@@ -150,3 +150,27 @@ Update Mode: updateDependencies
 
 The following packages were updated:
   com.unity.collab-proxy from version 1.11.2 to 1.13.5
+
+=== Wed Nov 10 08:37:40 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.2d.animation from version 5.0.8 to 5.0.9
+
+=== Wed Nov 24 09:09:24 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.collab-proxy from version 1.13.5 to 1.15.1
+
+=== Fri Dec  3 09:53:01 2021
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.collab-proxy from version 1.15.1 to 1.15.4

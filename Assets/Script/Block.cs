@@ -6,47 +6,41 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
 
-    [Header("Configuration Parameters")]
     [SerializeField] AudioClip blockBreak;
     [SerializeField] GameObject blockSparklesVFX;
     [SerializeField] Sprite[] hitSprites;
-
     [SerializeField] GameObject powerUps;
     [SerializeField] bool releasePowerUp = false;
 
-    float health = 200;
+    float health;
+    [SerializeField] float blockMaxHealth = 200;
 
-    //cached reference
+
     Level level;
     PowerupControl powerupControl;
+    NumberBlockControl blockControl;
 
-    //state variables
     int timesHit;
+    private void Awake()
+    {
+        level = FindObjectOfType<Level>();
+        blockControl = FindObjectOfType<NumberBlockControl>();
+    }
 
     private void Start()
     {
+        health = blockMaxHealth;
         powerupControl = FindObjectOfType<PowerupControl>();
         if (powerupControl == null)
         {
             Debug.Log("forgot powerupControl on level");
         }
-        CountBreakableBlocks();
+        CountBlocks();
     }
 
-    private void CountBreakableBlocks() //conta os blocos no começo
-    {
-        level = FindObjectOfType<Level>();
-        if (tag == "Breakable" || tag == "WinBlock")
-        {
-            level.CountBlocks();
-            if (tag == "WinBlock")
-            {
-                level.WinBlocks();
-            }
-        }
-    }
+    private void CountBlocks() { blockControl.CountBlocks(tag); }
 
-    //TESTE SE BOLA ATINGE
+    // TEST IF BALL HIT (ONE HIT, ONE DAMAGE)
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (tag == "Breakable" || tag == "WinBlock")
@@ -55,15 +49,15 @@ public class Block : MonoBehaviour
         }
     }
 
-    //TESTE SE LASER ATINGE
+    // TEST IF LASER HIT (DIFFERENT BEHAVIOUR FROM BALL)
     private void OnTriggerEnter2D(Collider2D other)
     {
         DamageDealer damageDealer = other.gameObject.GetComponent<DamageDealer>();
-        if (!damageDealer) { return; } //testa se objeto que atingiu não possui DamageDealer
-        ProcessHit(damageDealer);
+        if (!damageDealer) { return; }
+        LaserHit(damageDealer);
     }
 
-    private void ProcessHit(DamageDealer damageDealer)
+    private void LaserHit(DamageDealer damageDealer)
     {
         health -= damageDealer.GetDamage();
         damageDealer.Hit();
@@ -71,7 +65,7 @@ public class Block : MonoBehaviour
         if (health <= 0)
         {
             HandleHit();
-            health = 200;
+            health = blockMaxHealth;
         }
     }
 
@@ -82,7 +76,7 @@ public class Block : MonoBehaviour
         if (timesHit == maxHits)
         {
             CallPowerUp();
-            DestroyBlockFromInside();
+            DestroyBlockPlaying();
         }
         else { ShowNextHitSprite(); }
     }
@@ -90,39 +84,23 @@ public class Block : MonoBehaviour
     private void ShowNextHitSprite()
     {
         int spriteIndex = timesHit - 1;
-        if (hitSprites[spriteIndex] != null)
-        {
-            GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
-        }
-        else
-        {
-            Debug.LogError("Block sprite is missing from array " + gameObject.name); //indica se tem um sprite faltando em algum bloco
-        }
+        if (hitSprites[spriteIndex] != null) { GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex]; }
+        else { Debug.LogError("Block sprite is missing from array " + gameObject.name); }
     }
 
-    //DESTRUIÇÃO DE BLOCOS
-    public void DestroyBlockFromOutside() //chamado de outra classe, usada quando termina a fase e o bloco não é destruido
+    // BLOCK DESTRUCTION
+    public void DestroyBlockWinLevel()
     {
         DestroyAndPlay();
     }
 
-    private void DestroyBlockFromInside() //proprio bloco se destroy, quando atingido por algo
+    private void DestroyBlockPlaying()
     {
-        if (tag == "WinBlock")
-        {
-            level.WinBlocksDestroyed();
-            FindObjectOfType<GameSession>().AddToScore();
-        }
-        else if (tag == "Breakable")
-        {
-            level.BlockDestroyed();
-            FindObjectOfType<GameSession>().AddToScore();  //roda o grupo AddToScore() no arquivo GameSession, contar o score
-        }
-        //fazendo (gameObject, 1f) ele leva um tempo para sumir
+        blockControl.DestroyBlockCount(tag);
         DestroyAndPlay();
     }
 
-    private void DestroyAndPlay() //toca som, joga faiscas e destroy o bloco
+    private void DestroyAndPlay()
     {
         AudioSource.PlayClipAtPoint(blockBreak,
                                 Camera.main.transform.position,
@@ -134,10 +112,9 @@ public class Block : MonoBehaviour
     private void TriggerSparklesVFX()
     {
         GameObject sparkles = Instantiate(blockSparklesVFX, transform.position, transform.rotation);
-        Destroy(sparkles, 1f); //destroi o objeto, após 1 seg(?)
+        Destroy(sparkles, 1f);
     }
 
-    //CHAMA OS POWER UPS!!!
     private void CallPowerUp()
     {
         if (powerupControl.CountBlocksToPowerup(releasePowerUp))

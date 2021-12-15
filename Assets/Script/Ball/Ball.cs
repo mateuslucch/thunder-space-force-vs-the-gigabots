@@ -9,14 +9,13 @@ public class Ball : MonoBehaviour
 
     GameObject extraBall;
 
-    //mais bolas PowerUp!!
     public void ExtraBalls()
     {
         var offset = new Vector3(0, 0.1f, 0);
         extraBall = Instantiate(gameObject, transform.position + offset, transform.rotation);
         extraBall.GetComponent<BallMove>().LaunchBall();
     }
-    //fim extra balls
+
     public void DestroyBall() { Destroy(gameObject); }
     public void DestroyOnHit() { Destroy(gameObject); }
 

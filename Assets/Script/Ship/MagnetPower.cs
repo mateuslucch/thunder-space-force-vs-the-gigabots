@@ -11,19 +11,15 @@ public class MagnetPower : MonoBehaviour
 
     private void Update()
     {
-        if (magnetCountdown > 0)
-        {
-            magnetCountdown -= Time.deltaTime;
-        }
-        else
-        {
-            magnetsPower = false;
-        }
+        if (magnetCountdown > 0) { magnetCountdown -= Time.deltaTime; }
+        else { magnetsPower = false; }
     }
+
     public void MagnetsOn()
     {
         magnetCountdown = magnetsTime;
         magnetsPower = true;
     }
+    
     public bool IsMagnetsOn() { return magnetsPower; }
 }

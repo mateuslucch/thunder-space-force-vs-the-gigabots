@@ -6,21 +6,27 @@ using TMPro;
 public class ShowScore : MonoBehaviour
 {
 
-    TextMeshProUGUI scoreText;
-    GameSession gameSession;
+    [SerializeField] TextMeshProUGUI scoreText;
+    
+    private void OnEnable()
+    {
+        int score = ScoreValues.showScore;
+        UpdateScore(score);
+    }
 
     void Start()
     {
-        scoreText = GetComponent<TextMeshProUGUI>();
-        gameSession = FindObjectOfType<GameSession>();
+        int score = ScoreValues.showScore;
+        UpdateScore(score);
     }
 
     public void UpdateScore(int score)
     {
-        if (scoreText != null)
+        if (!scoreText)
         {
-            scoreText.text = ("Score: \n") + score;
+            print("there is no scoretext.");
+            return;
         }
-        else { print("There is no scorebox"); }
+        scoreText.text = ("Score: \n") + score;
     }
 }

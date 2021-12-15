@@ -1,115 +1,74 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.SceneManagement;
 
 public class GameSession : MonoBehaviour
 {
     [Range(0.1f, 10f)] [SerializeField] float gameSpeed = 1f;
     float realTimeSpeed;
-    [SerializeField] int pointPerBlockDestroyed = 20;
-    [SerializeField] TextMeshProUGUI scoreText;
-    [SerializeField] bool isAutoPlayEnabled;
-    [SerializeField] int lastScene;
 
-    //state variables
-    ShowScore showScore;
-    int currentScore = 0; //gameplay score
-    int totalScore = 0;
-    int startScore = 0; //score when starting level
+    [SerializeField] int showScore; // show final score, use this only to show score (winnig or loose)
+    [SerializeField] int totalWinScore; // total score only for winnigs and show in level UI
+    [SerializeField] int levelScore; // score from level
+    [SerializeField] int lastLevelIndex;
 
     int currentSceneIndex;
+    ScoreControl scoreControl;
 
     private void Awake()
     {
-        int gameStatusCount = FindObjectsOfType<GameSession>().Length;
-        if (gameStatusCount > 1)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            DontDestroyOnLoad(gameObject);
-        }
+        int gameSession = FindObjectsOfType<GameSession>().Length;
+        if (gameSession > 1) { Destroy(gameObject); }
+        else { DontDestroyOnLoad(gameObject); }
     }
 
     private void Start()
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex; //busca o valor da primeira scene quando gamesession é carregado
         realTimeSpeed = gameSpeed;
-        StartLevel();
+        if (Time.timeScale != realTimeSpeed) { Time.timeScale = realTimeSpeed; }
     }
 
-    void Update()
+    public void GamePause(bool gamePaused)
     {
-        Time.timeScale = realTimeSpeed; //!!!!
+        if (gamePaused) { Time.timeScale = 0f; }
+        else { Time.timeScale = realTimeSpeed; }
     }
 
-    public void GamePause()
+    public void UpdateFinalScore(bool levelWin)
     {
-        realTimeSpeed = 0f;
+        scoreControl = FindObjectOfType<ScoreControl>();
+        levelScore = scoreControl.LevelScore();
+
+        // increment totalwinscore if win
+        if (levelWin)
+        {
+            totalWinScore += levelScore;
+            showScore = totalWinScore;
+        }
+        // only show lose score if lose(preserv finalScore)
+        else
+        {
+            showScore = totalWinScore + levelScore; // endgameScore here is last 
+        }
+        ScoreValues.totalWinScore = totalWinScore;
+        ScoreValues.showScore = showScore;
     }
 
-    public void GameUnPause()
-    {
-        realTimeSpeed = gameSpeed;
-    }
+    public void LastLevelIndex(int index) { lastLevelIndex = index; }
 
-    public void SceneManagement()
-    {
-        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        //currentSceneIndex++;
-    }
+    public int ResetWinScore() { return totalWinScore; }
 
-    public void AddToScore()
-    {
-        currentScore = currentScore + pointPerBlockDestroyed;
-        UpdateScore();
-    }
+    public int FinalScore() { return showScore; }
 
-    public void UpdateScore()
-    {
-        showScore.UpdateScore(currentScore);
-    }
+    // call in sceneloader when go to main menu
+    public void DestroyGameSession() { Destroy(gameObject); }
 
-    public int GetScore()
+    // Rollback the score and Restart the level
+    public int RestartLastLevel()
     {
-        return currentScore;
-    }
-
-    public void TotalScore() //atualiza o score total se ganhar
-    {
-        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        totalScore = currentScore;
-        startScore = currentScore;
-        currentScore = 0;
-        //FindObjectOfType<LeaderboardUpdate>().UpdateLeaderboard(totalScore);
-    }
-
-    //processo "resetar" GameSession
-    public void ResetGame() //o método é chamado no arquivo SceneLoader.cs, dependendo do botão que clica no jogo
-    {
-        Destroy(gameObject);
-    }
-
-    private void StartLevel()
-    {
-        currentScore = totalScore;
-        showScore = FindObjectOfType<ShowScore>();
-        showScore.UpdateScore(currentScore);
-    }
-
-    //Processo Autoplay testes
-    public bool IsAutoPlayEnabled()
-    {
-        return isAutoPlayEnabled;
-    }
-
-    //Rollback the score and Restart the level
-    public void RestartLastLevel()
-    {
-        FindObjectOfType<SceneLoader>().RestartLevel(lastScene);
-        currentScore = startScore; //rollback do score, só quando perde        
+        showScore = totalWinScore; // rollback do score, só quando perde e reinicia fase        
+        return lastLevelIndex;
     }
 }

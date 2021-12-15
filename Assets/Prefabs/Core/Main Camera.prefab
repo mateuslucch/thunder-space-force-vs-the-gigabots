@@ -106,9 +106,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curShader: {fileID: 4800000, guid: 7ad8bf463e9087f4fb95f50340507ec5, type: 3}
-  Distortion: 0.05
+  Distortion: 0.01
   InputGamma: 2.5
   OutputGamma: 1.5
-  TextureSize: {x: 1620, y: 2160}
+  TextureSize: {x: 700, y: 700}
   RGB1: {x: 1, y: 0.7, z: 1}
   RGB2: {x: 1, y: 1, z: 0.7}
+  mainCamera: {fileID: 20188137695721000}

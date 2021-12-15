@@ -10,13 +10,12 @@ public class BallMove : MonoBehaviour
 
     [SerializeField] float randomFactorY; //para trocar a direção da bola quando atinge objetos
     [SerializeField] float randomFactorX;
-
-    float myVelocity;
+    
     [SerializeField] float xVel = 5f;
     [SerializeField] float yVel = 12f;
 
+    float myVelocity;
     Vector2 velocityTweak;
-
     Rigidbody2D myRigidBody2D;
 
     void Start()

@@ -11,6 +11,10 @@ GameObject:
   - component: {fileID: 4936096607976428}
   - component: {fileID: 114300855710127076}
   - component: {fileID: 114237099162718040}
+  - component: {fileID: 5718610189681019065}
+  - component: {fileID: 6390656097770687620}
+  - component: {fileID: 435771614448781143}
+  - component: {fileID: 5529470924291096983}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -44,20 +48,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a2612c4b70fa8c4aa85519de9b83d9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberBlocks: {fileID: 0}
-  gameStatus: {fileID: 0}
-  levelNumber: {fileID: 0}
   levelNumberFactor: 0
-  ballLives: 3
-  ballLivesText: {fileID: 0}
-  blocksToPowerUp: 2
-  allGenericBlocks: []
   lastBalls: []
   lastPowerUps: []
   lastBlocks: []
   soundLevel: {fileID: 11400000, guid: 244a2aea2a7793943ae4dd1d41d55a01, type: 2}
   youLoseSound: {fileID: 8300000, guid: 4ffc98b8d0e364f409fbf460807996b7, type: 3}
-  inGameMenu: {fileID: 0}
 --- !u!114 &114237099162718040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,3 +66,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14e8d80590ea6954b94fea6bcf10e8f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5718610189681019065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676320389881618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621554f2c3f40904a9c668aa48b3e24f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberLives: 3
+--- !u!114 &6390656097770687620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676320389881618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 974f555799bcb30439238bf8e2a8ff79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberBalls: 1
+--- !u!114 &435771614448781143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676320389881618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865746e2dd0095d4790b0e686ee7b056, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalScore: 0
+--- !u!114 &5529470924291096983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676320389881618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85c1e9c2879699546a328fa271ebf71c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specialBlockPoints: 5
+  ordinaryBlockPoints: 3
+  indestructibleBlockPoints: 2

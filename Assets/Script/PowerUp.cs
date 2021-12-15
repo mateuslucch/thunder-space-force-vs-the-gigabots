@@ -11,7 +11,7 @@ public class PowerUp : MonoBehaviour
     [SerializeField] public Sprite[] powerUpSprites;
     [SerializeField] AudioClip[] powerUpSFX;
 
-    int pUElement;
+    int puEffect;
 
     private SpriteRenderer spriteRenderer;
 
@@ -19,64 +19,61 @@ public class PowerUp : MonoBehaviour
     {
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        //pUElement = Random.Range(0, powerUpSprites.Length); //nao usar!! sem probabilidades, só randomico
-
+        
         float randomPercentage = Random.Range(0f, 101f);
         if (randomPercentage <= 50f)
         {
-            pUElement = Random.Range(0, 3);
-            spriteRenderer.sprite = powerUpSprites[pUElement];
+            puEffect = Random.Range(0, 2);
+            spriteRenderer.sprite = powerUpSprites[puEffect];
         }
         if (randomPercentage >= 51f && randomPercentage <= 94f)
         {
-            pUElement = 3;
-            spriteRenderer.sprite = powerUpSprites[pUElement];
+            puEffect = 3;
+            spriteRenderer.sprite = powerUpSprites[puEffect];
         }
         if (randomPercentage >= 95f)
         {
-            pUElement = 4;
-            spriteRenderer.sprite = powerUpSprites[pUElement];
+            puEffect = 4;
+            spriteRenderer.sprite = powerUpSprites[puEffect];
         }
 
-        //usar para testes multiplos
+        // use for multiple powerups tests
         //pUElement = Random.Range(0,2);  
-        //usar para testes individuais
-        //pUElement = 3;
+        // use for particular powerup test
+        //puEffect = 2;
 
-        spriteRenderer.sprite = powerUpSprites[pUElement];
+        spriteRenderer.sprite = powerUpSprites[puEffect];
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Paddle" || collision.gameObject.tag == "ExtraPaddle")
         {
-            AudioSource.PlayClipAtPoint(powerUpSFX[pUElement], Camera.main.transform.position, PlayerPrefsController.GetSfxVolume());
+            AudioSource.PlayClipAtPoint(powerUpSFX[puEffect], Camera.main.transform.position, PlayerPrefsController.GetSfxVolume());
             Destroy(gameObject);
-            
-            if (pUElement == 0) //magnets OK!!!
+
+            if (puEffect == 0)
             {
                 FindObjectOfType<MagnetPower>().MagnetsOn();
             }
-            if (pUElement == 1)  //chamar mais bolas...ok!!
+            if (puEffect == 1)
             {
-                FindObjectOfType<Ball>().ExtraBalls(); //instatiate
-                FindObjectOfType<Level>().AddBall(); //increase count
+                FindObjectOfType<Ball>().ExtraBalls();
+                FindObjectOfType<BallCount>().AddBall();
             }
-            if (pUElement == 2) //extra ships OK!
+            if (puEffect == 2)
             {
                 FindObjectOfType<PaddleMove>().ExtraShip();
             }
-            if (pUElement == 3) //lasers ok!!
+            if (puEffect == 3)
             {
                 FindObjectOfType<Paddle>().ActivateLasers();
             }
-            if (pUElement == 4) //vida extra OK!!
+            if (puEffect == 4)
             {
-                FindObjectOfType<Level>().ExtraLife();
-            }         
-
+                FindObjectOfType<LivesControl>().ChangeLife(+1);
+            }
         }
-
     }
 
     public void Hit()

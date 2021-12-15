@@ -9,25 +9,32 @@ public class PaddleMove : MonoBehaviour
     [SerializeField] float maxStandartX = 12.6f;
     [SerializeField] float extendedMaxBounds = 0f;
     [SerializeField] float extendedMinBounds = 0f;
-    [SerializeField] float paddleSpeed = 1f;
-
-    float minX = 3.4f;
-    float maxX = 12.6f;
-
     [SerializeField] float totalExtraShipTime = 10f;
-    [SerializeField] GameObject ballObject;
 
-    bool paddlePaused = false;
+    [SerializeField] float mousePaddleOffset = 0f;
+    float screenWidthInUnitsx;
+
+    GameObject ballObject;
+    bool shipPaused = false;
     bool extraShipActive;
     float extraShipTime;
+    float minX;
+    float maxX;
 
     Animator myAnimator;
-    Vector2 paddlePos; //usado quando mouse unico controle
+    Vector2 shipPos; //usado quando mouse unico controle
     GameSession theGameSession;
     Ball theBall;
+    Camera mainCamera;
 
     void Start()
     {
+        mainCamera = Camera.main;
+
+        screenWidthInUnitsx = mainCamera.pixelWidth * mainCamera.orthographicSize * 2 / mainCamera.pixelHeight;
+
+        minX = minStandartX;
+        maxX = maxStandartX;
         myAnimator = GetComponent<Animator>();
         theGameSession = FindObjectOfType<GameSession>();
         theBall = FindObjectOfType<Ball>();
@@ -35,54 +42,30 @@ public class PaddleMove : MonoBehaviour
 
     void Update()
     {
+        if (shipPaused == false) { MoveWithMouse(); }
 
-        if (paddlePaused == false) //condição, trocada quando abre e fecha menu
-        {
-            MoveWithControls();
-        }
-
-        if (extraShipTime > 0)
-        {
-            extraShipTime -= Time.deltaTime;
-        }
-        else
-        {
-            ReturnExtraShip();
-        }
+        if (extraShipTime > 0) { extraShipTime -= Time.deltaTime; }
+        else { ReturnExtraShip(); }
     }
 
-    private void MoveWithControls()
+    private void MoveWithMouse()
     {
-        float deltaX = Input.GetAxisRaw("Horizontal") * paddleSpeed * Time.deltaTime;
-        MoveObject(deltaX);
+        Vector2 shipPos = new Vector2(transform.position.x, transform.position.y); //"transform.position.y" mantém na posição y que está no unity
+        shipPos.x = Mathf.Clamp(GetXPos(), minX, maxX);
+        transform.position = shipPos;
     }
 
-    public void MoveWithTouch(int direction)
-    {
-        float deltaX;
-        deltaX = Time.deltaTime * paddleSpeed * direction;
-        MoveObject(deltaX);
-    }
+    private float GetXPos() { return Input.mousePosition.x / Screen.width * screenWidthInUnitsx - mousePaddleOffset; }
 
     private void MoveObject(float deltaX)
     {
-        var newXPos = Mathf.Clamp(transform.position.x + deltaX, minX, maxX);
-        transform.position = new Vector2(newXPos, transform.position.y);
+        print(deltaX);
+        Vector2 paddlePos = new Vector2(transform.position.x, transform.position.y); //"transform.position.y" mantém na posição y que está no unity
+        paddlePos.x = Mathf.Clamp(deltaX, minX, maxX);
+        transform.position = paddlePos;
     }
 
-    private float GetXPos()
-    {
-        if (theGameSession.IsAutoPlayEnabled()) //testes. paddle segue a bola
-        {
-            return theBall.transform.position.x;
-        }
-        else
-        {
-            return Input.GetAxis("Horizontal");
-        }
-    }
-
-    //inicio extra paddle
+    // start extra ship
     public void ExtraShip()
     {
         if (extraShipActive == false)
@@ -106,20 +89,10 @@ public class PaddleMove : MonoBehaviour
             maxX = maxStandartX;
         }
     }
-    public void EnlargeIdle()
-    {
-        myAnimator.SetBool("SingleShip", false);
-    }
-    //fim extra ships
 
-    public void PaddlePause()
-    {
-        paddlePaused = true;
-    }
+    public void ExtraShipIdle() { myAnimator.SetBool("SingleShip", false); }
+    // end extra ships
 
-    public void PaddleUnPause()
-    {
-        paddlePaused = false;
-    }
+    public void PauseShip(bool pause) { shipPaused = pause; }
 
 }

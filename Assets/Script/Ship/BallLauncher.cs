@@ -24,7 +24,10 @@ public class BallLauncher : MonoBehaviour
         if (ball != null)
         {
             LockBalltoPaddle();
-            LaunchOnPc();
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+            {
+                LaunchBall();
+            }
         }
     }
 
@@ -38,23 +41,6 @@ public class BallLauncher : MonoBehaviour
     {
         ball = collision.gameObject;
         ball.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, 0f);
-    }
-
-    public void LaunchFromTouch()
-    {
-        if (ball != null)
-        {
-            LaunchBall();
-        }
-    }
-
-    private void LaunchOnPc()
-    {
-        //if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            LaunchBall();
-        }
     }
 
     private void LaunchBall()

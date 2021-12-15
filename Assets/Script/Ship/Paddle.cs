@@ -15,8 +15,6 @@ public class Paddle : MonoBehaviour
     float timeToStop;
     float shotCounter;
 
-    bool firePowerUp = false;
-
     void Update()
     {
         if (timeToStop > 0)
@@ -24,19 +22,12 @@ public class Paddle : MonoBehaviour
             CountDownAndShoot();
             timeToStop -= Time.deltaTime;
         }
-
     }
 
     //lasers!!
-    public void ActivateLasers()
-    {
-        timeToStop = timeShooting;
-    }
+    public void ActivateLasers() { timeToStop = timeShooting; }
 
-    public void StopLasers()// parar quando jogo encerra, evitar pontos extras
-    {
-        timeToStop = 0f;
-    }
+    public void StopLasers() { timeToStop = 0f; }
 
     private void CountDownAndShoot()
     {
